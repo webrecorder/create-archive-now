@@ -1,0 +1,35 @@
+{
+  "name": "archive-now",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "build": "webpack --mode production",
+    "build-dev": "webpack --mode development",
+    "start": "webpack serve --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webrecorder/express.archiveweb.page.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/webrecorder/express.archiveweb.page/issues"
+  },
+  "homepage": "https://github.com/webrecorder/express.archiveweb.page#readme",
+  "dependencies": {
+    "@webrecorder/archivewebpage": "^0.12.8",
+    "lit": "^3.2.1",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^12.0.2",
+    "html-webpack-plugin": "^5.6.0",
+    "ts-loader": "^9.5.1",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  }
+}

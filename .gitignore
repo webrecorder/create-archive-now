@@ -1,0 +1,11 @@
+*.har
+*.warc
+*.warc.gz
+**/node_modules
+yarn-error.log
+coverage/
+**/local-examples/
+**/.DS_Store
+**/.sass-cache/
+**/__pycache__/
+dist/
