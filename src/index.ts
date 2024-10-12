@@ -29,8 +29,8 @@ class ArchiveNow extends LitElement
   @query("sl-dialog")
   private dialog? : SlDialog;
 
-  @state()
-  private promoteAWP = false;
+  private currUrl = "";
+  private shownForUrl = false;
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     window.addEventListener("message", (event) => {
@@ -64,13 +64,20 @@ class ArchiveNow extends LitElement
         case "page-loading":
           if (!event.data.loading) {
             this.pageCount++;
-          } else {
-            this.hintMessage = "";
+          }
+          break;
+
+        case "urlchange":
+          this.hintMessage = "";
+          if (this.currUrl !== event.data.url) {
+            this.shownForUrl = false;
+            this.currUrl = event.data.url;
           }
           break;
       }
 
-      if (this.hintMessage || this.pageCount > PAGE_COUNT_MIN) {
+      if ((this.hintMessage || this.pageCount > PAGE_COUNT_MIN) && !this.shownForUrl) {
+        this.shownForUrl = true;
         this.dialog?.show();
       }
     });
