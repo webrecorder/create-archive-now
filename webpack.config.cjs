@@ -5,6 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const package_json = require("./package.json");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: "development",
@@ -41,15 +42,30 @@ module.exports = {
           onlyCompileBundledFiles: false,
         },
       },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
+      },
     ],
   },
 
   plugins: [
+    // doing this separately for now
+    //new CopyPlugin({
+    //  patterns: [
+    //    { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/ui.js", to: "../awp-ui.js" },
+    //    { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/replay/sw.js", to: "../replay/sw.js" }
+    //  ],
+    //}),
+    new MiniCssExtractPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/ui.js", to: "../ui.js" },
-        { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/replay/sw.js", to: "../replay/sw.js" }
-      ],
+        // Copy Shoelace assets to dist/shoelace
+        {
+          from: path.resolve(__dirname, 'node_modules/@shoelace-style/shoelace/dist/assets'),
+          to: path.resolve(__dirname, 'dist/shoelace/assets')
+        }
+      ]
     }),
     new HtmlWebpackPlugin({
       title: "Archive Now",
