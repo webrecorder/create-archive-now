@@ -45,7 +45,7 @@ class ArchiveNow extends LitElement
           if (event.data.status === 403) {
             this.hintMessage = "It looks like this site is blocking us from loading it.";
           } else if (event.data.status > 500) {
-            this.hintMessage = "it looks like this might not be a valid URL, or the site is down";
+            this.hintMessage = "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
             this.hintMessage = "It looks like you're been rate limited (by this site, not by us!).";
           } else {
