@@ -87,6 +87,7 @@ class ArchiveNow extends LitElement
     return html`
     ${!this.isFinished ? html`
     <archive-web-page
+      proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
       sandbox="true"
       coll=${this.collId}
       deepLink="true"

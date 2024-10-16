@@ -1399,6 +1399,7 @@
       coll=${this.collId}
       >`:Yt`
     <archive-web-page
+      proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
       sandbox="true"
       coll=${this.collId}
       deepLink="true"
