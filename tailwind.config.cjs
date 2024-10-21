@@ -1,8 +1,12 @@
 import { colors } from "@webrecorder/hickory/tokens/tailwind";
+import { tailwindTransform } from "postcss-lit";
 import { merge } from "es-toolkit";
 
 export default {
   content: ["./src/**/*.{html,js,ts,ejs}"],
+  transform: {
+    ts: tailwindTransform,
+  },
   theme: {
     fontFamily: {
       display: [

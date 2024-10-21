@@ -4,8 +4,9 @@ import { customElement, query, state } from "lit/decorators.js";
 
 import { SlDialog } from "@shoelace-style/shoelace";
 
+import themeCSS from "./theme.stylesheet.css";
+
 import "./shoelace";
-import "./theme.css";
 
 const PAGE_COUNT_MIN = 4;
 
@@ -31,6 +32,14 @@ class ArchiveNow extends LitElement {
 
   private currUrl = "";
   private shownForUrl = false;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+
+    const theme = new CSSStyleSheet();
+    theme.replaceSync(themeCSS as string);
+    this.shadowRoot?.adoptedStyleSheets.push(theme);
+  }
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     window.addEventListener("message", (event) => {
@@ -101,7 +110,7 @@ class ArchiveNow extends LitElement {
             url="https://example.com/"
           ></archive-web-page>`
         : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
-      <div class="bg-red-500">
+      <div class="w-96 p-4">
         ${!this.isFinished
           ? html`
               <h2>High-Fidelity Archiving in your Browser</h2>

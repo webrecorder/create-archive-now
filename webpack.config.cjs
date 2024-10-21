@@ -57,16 +57,26 @@ module.exports = {
         ],
       },
       {
+        // Global styles and assets, like fonts and Shoelace,
+        // that get added to document styles
         test: /\.css$/i,
-        // include: [
-        //   path.resolve(__dirname, "src"),
-        //   path.resolve(__dirname, "node_modules/@shoelace-style/shoelace"),
-        // ],
+        include: [
+          path.resolve(__dirname, "src"),
+          path.resolve(__dirname, "node_modules/@shoelace-style/shoelace"),
+        ],
+        exclude: /\.stylesheet\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
           { loader: "css-loader", options: { importLoaders: 1 } },
           "postcss-loader",
         ],
+      },
+      {
+        // CSS loaded as raw string and used as a CSSStyleSheet
+        test: /\.stylesheet\.css$/,
+        type: "asset/source",
+        include: [path.resolve(__dirname, "src")],
+        use: ["postcss-loader"],
       },
     ],
   },
