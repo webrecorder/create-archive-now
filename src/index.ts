@@ -1,10 +1,11 @@
-import { html, LitElement, PropertyValues } from "lit";
+import { html, LitElement, nothing, PropertyValues } from "lit";
 
 import { customElement, query, state } from "lit/decorators.js";
 
 import { SlDialog } from "@shoelace-style/shoelace";
 
 import themeCSS from "./theme.stylesheet.css";
+import linkySrc from "./assets/linky-2.avif";
 
 import "./shoelace";
 
@@ -118,7 +119,6 @@ class ArchiveNow extends LitElement {
               <p>Everything you see loaded on the left is being archived!</p>
 
               <p>When you're done, click <b>Finish</b></p>
-              ${this.renderDialogs()}
             `
           : html`
               <h2>Replaying Archives</h2>
@@ -140,7 +140,45 @@ class ArchiveNow extends LitElement {
   }
 
   private renderSuggestion() {
-    return html` <div class="fixed"></div> `;
+    return html`
+      <div class="fixed bottom-8 right-3 flex items-end gap-4">
+        <div>
+          <div
+            class="mb-16 max-w-sm rounded-lg border border-cyan-200/40 bg-white shadow-lg"
+            role="alert"
+            aria-live="polite"
+          >
+            <div
+              class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
+            >
+              <p>Having issues with this page?</p>
+              <button @click=${() => (this.hintMessage = "")}>X</button>
+            </div>
+            <div class="text-pretty p-4">
+              ${this.hintMessage
+                ? html`<p class="mb-3">${this.hintMessage}</p>`
+                : nothing}
+              <p class="mb-3">
+                This page may not work as expected with
+                <strong class="font-semibold">archivepage.now</strong>, which is
+                a demo with reduced features.
+              </p>
+              <p>
+                Try using
+                <a
+                  class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+                  href="#"
+                  target="_blank"
+                  >ArchiveWeb.page</a
+                >
+                instead!
+              </p>
+            </div>
+          </div>
+        </div>
+        <img class="h-32 w-auto" src=${linkySrc} />
+      </div>
+    `;
   }
 
   renderDialogs() {
