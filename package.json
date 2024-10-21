@@ -8,7 +8,7 @@
     "build-dev": "webpack --mode development",
     "start": "webpack serve --mode development",
     "update-awp": "cp ./node_modules/@webrecorder/archivewebpage/dist/embed/ui.js ./awp-ui.js; cp ./node_modules/@webrecorder/archivewebpage/dist/embed/replay/sw.js ./replay/sw.js ",
-    "format": "prettier --write ."
+    "format": "prettier --write src"
   },
   "repository": {
     "type": "git",
