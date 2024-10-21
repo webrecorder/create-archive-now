@@ -181,42 +181,6 @@ class ArchiveNow extends LitElement {
       </div>
     `;
   }
-
-  renderDialogs() {
-    return html`
-      <sl-dialog label="Suggestion" class="dialog-width" style="--width: 50vw;">
-        ${this.hintMessage
-          ? html` <p>${this.hintMessage}</p>
-              <p>
-                This is an archiving demo that runs through a proxy and many
-                things don't quite work.
-              </p>
-              <p>For better results, try our ArchiveWeb.page extension.</p>`
-          : ``}
-        ${this.pageCount > PAGE_COUNT_MIN
-          ? html`
-              <p>
-                It looks like you're trying to archive multiple pages. While
-                it's possible to do it with this demo, the Browsertrix service
-                will make this a lot easier!
-              </p>
-            `
-          : ``}
-        <sl-button
-          slot="footer"
-          variant="primary"
-          @click="${this.onCloseDialog}"
-          >Close</sl-button
-        >
-      </sl-dialog>
-    `;
-  }
-
-  onCloseDialog() {
-    this.dialog?.hide();
-    this.pageCount = 0;
-    this.hintMessage = "";
-  }
 }
 
 function randomId() {
