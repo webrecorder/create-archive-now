@@ -60,7 +60,7 @@ class ArchiveNow extends LitElement {
               "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
             this.hintMessage =
-              "It looks like you're been rate limited (by this site, not by us!).";
+              "It looks like you're been rate limited (by this site, not by us!)";
           } else {
             this.hintMessage = "It looks like this page could not be loaded.";
           }
@@ -68,7 +68,7 @@ class ArchiveNow extends LitElement {
 
         case "rate-limited":
           this.hintMessage =
-            "It looks like you're been rate limited (by this site, not by us!).";
+            "It looks like you're been rate limited (by this site, not by us!)";
           break;
 
         case "post-request-failed":
@@ -135,11 +135,13 @@ class ArchiveNow extends LitElement {
               </p>
             `}
       </div>
-      ${this.renderSuggestion()}
+      ${this.renderHint()}
     `;
   }
 
-  private renderSuggestion() {
+  private renderHint() {
+    if (!this.hintMessage) return;
+
     return html`
       <div class="fixed bottom-8 right-3 flex items-end gap-4">
         <div>
@@ -151,13 +153,12 @@ class ArchiveNow extends LitElement {
             <div
               class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
             >
-              <p>Having issues with this page?</p>
+              <p class="font-semibold">Issues archiving this page?</p>
+              <sl-icon name="gear"></sl-icon>
               <button @click=${() => (this.hintMessage = "")}>X</button>
             </div>
             <div class="text-pretty p-4">
-              ${this.hintMessage
-                ? html`<p class="mb-3">${this.hintMessage}</p>`
-                : nothing}
+              <p class="mb-3">${this.hintMessage}</p>
               <p class="mb-3">
                 This page may not work as expected with
                 <strong class="font-semibold">archivepage.now</strong>, which is
@@ -167,7 +168,7 @@ class ArchiveNow extends LitElement {
                 Try using
                 <a
                   class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-                  href="#"
+                  href="http://webrecorder.net/archivewebpage"
                   target="_blank"
                   >ArchiveWeb.page</a
                 >
