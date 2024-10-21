@@ -11,6 +11,7 @@ It requires the AWP 0.13.0+ version, currently available in `ts` branch of Archi
 
 ### Prerequisites
 
+- Node >=20
 - Yarn Classic (v1)
 
 ### Installation

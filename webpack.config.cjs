@@ -3,19 +3,19 @@ const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const package_json = require("./package.json");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: "development",
   entry: {
-    main: "src/index.ts"
+    main: "src/index.ts",
   },
   output: {
     path: path.join(__dirname, "dist"),
     filename: "[name].js",
-    clean: true
+    clean: true,
   },
   resolve: {
     extensions: [".ts", ".js"],
@@ -36,15 +36,37 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: "ts-loader",
         include: path.resolve(__dirname, "src"),
-        options: {
-          onlyCompileBundledFiles: false,
-        },
+        use: [
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                syntax: "postcss-lit",
+                plugins: ["tailwindcss", "autoprefixer"],
+              },
+            },
+          },
+          {
+            loader: "ts-loader",
+            options: {
+              onlyCompileBundledFiles: true,
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
+        // include: [
+        //   path.resolve(__dirname, "src"),
+        //   path.resolve(__dirname, "node_modules/@shoelace-style/shoelace"),
+        // ],
+        use: [
+          MiniCssExtractPlugin.loader,
+          { loader: "css-loader", options: { importLoaders: 1 } },
+          "postcss-loader",
+        ],
       },
     ],
   },
@@ -62,16 +84,19 @@ module.exports = {
       patterns: [
         // Copy Shoelace assets to dist/shoelace
         {
-          from: path.resolve(__dirname, 'node_modules/@shoelace-style/shoelace/dist/assets'),
-          to: path.resolve(__dirname, 'dist/shoelace/assets')
-        }
-      ]
+          from: path.resolve(
+            __dirname,
+            "node_modules/@shoelace-style/shoelace/dist/assets",
+          ),
+          to: path.resolve(__dirname, "dist/shoelace/assets"),
+        },
+      ],
     }),
     new HtmlWebpackPlugin({
       title: "Archive Now",
       template: "src/index.ejs",
       inject: "head",
-      scriptLoading: "blocking"
-    })
-  ]
+      scriptLoading: "blocking",
+    }),
+  ],
 };
