@@ -7,7 +7,8 @@
     "build": "webpack --mode production",
     "build-dev": "webpack --mode development",
     "start": "webpack serve --mode development",
-    "update-awp": "cp ./node_modules/@webrecorder/archivewebpage/dist/embed/ui.js ./awp-ui.js; cp ./node_modules/@webrecorder/archivewebpage/dist/embed/replay/sw.js ./replay/sw.js "
+    "update-awp": "cp ./node_modules/@webrecorder/archivewebpage/dist/embed/ui.js ./awp-ui.js; cp ./node_modules/@webrecorder/archivewebpage/dist/embed/replay/sw.js ./replay/sw.js ",
+    "format": "prettier --write src"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,8 @@
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.1",
+    "prettier": "^3.3.3",
+    "ts-lit-plugin": "^2.0.2",
     "ts-loader": "^9.5.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "webpack": "^5.95.0",
