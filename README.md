@@ -5,12 +5,27 @@ This tool provides an in-browser archiving + replay.
 It uses the new ArchiveWeb.page embed <archive-web-page> to provide the archiving,
 and `<replay-web-page>` to provide the replay.
 
-
 It requires the AWP 0.13.0+ version, currently available in `ts` branch of ArchiveWeb.page.
 
-### Requirements
+## Development
 
-Run `yarn start` to run local version.
+### Prerequisites
+
+- Yarn Classic (v1)
+
+### Installation
+
+Get dependencies:
+
+```sh
+yarn
+```
+
+Start dev server:
+
+```sh
+yarn start
+```
 
 ### Updating AWP
 
