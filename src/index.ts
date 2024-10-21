@@ -101,7 +101,8 @@ class ArchiveNow extends LitElement {
   }
 
   render() {
-    return html` ${!this.isFinished
+    return html`
+      ${!this.isFinished
         ? html` <archive-web-page
             proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
             sandbox="true"
@@ -133,7 +134,13 @@ class ArchiveNow extends LitElement {
                 >
               </p>
             `}
-      </div>`;
+      </div>
+      ${this.renderSuggestion()}
+    `;
+  }
+
+  private renderSuggestion() {
+    return html` <div class="fixed"></div> `;
   }
 
   renderDialogs() {

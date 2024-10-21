@@ -78,6 +78,10 @@ module.exports = {
         include: [path.resolve(__dirname, "src")],
         use: ["postcss-loader"],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif|avif)$/i,
+        type: "asset/resource",
+      },
     ],
   },
 
