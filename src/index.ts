@@ -26,6 +26,9 @@ class ArchiveNow extends LitElement {
   @state()
   private pageCount = 0;
 
+  @state()
+  private showHint = true;
+
   private currUrl = "";
   private shownForUrl = false;
 
@@ -135,76 +138,87 @@ class ArchiveNow extends LitElement {
 
   private renderHint() {
     const overPageMin = this.pageCount > PAGE_COUNT_MIN;
+    let title = "Let's archive this website!";
+    let message = html`Browse the website like you would normally. Every time
+    you follow a link, the newly loaded page will be added to your archive.`;
 
-    if (!this.hintMessage && !overPageMin) return;
+    if (this.hintMessage) {
+      title = "Issues archiving this page?";
+      message = html`
+        <p class="mb-3">
+          This page may not work as expected with
+          <strong class="font-semibold">archivepage.now</strong>, which is a
+          demo with reduced features.
+        </p>
+        <p>
+          Try using
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://webrecorder.net/archivewebpage"
+            target="_blank"
+            >ArchiveWeb.page</a
+          >
+          instead!
+        </p>
+      `;
+    } else if (overPageMin) {
+      title = "Archiving a lot of pages?";
+      message = html`
+        <p class="mb-3">
+          You can automatically archive multiple pages and entire websites with
+          <strong class="font-semibold">Browsertrix</strong>, our browser-based
+          crawling service.
+        </p>
+        <div>
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://webrecorder.net/browsertrix"
+            target="_blank"
+            >Learn more</a
+          >
+          about how automated crawling can supplement a manual archiving
+          workflow.
+        </div>
+      `;
+    }
 
     return html`
       <div class="fixed bottom-8 right-3 flex items-end gap-4">
         <div>
-          <div
-            class="mb-16 max-w-sm rounded-lg border border-cyan-200/40 bg-white shadow-lg"
-            role="alert"
-            aria-live="polite"
-          >
-            <div
-              class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
-            >
-              <p class="font-semibold">
-                ${this.hintMessage
-                  ? "Issues archiving this page?"
-                  : "Archiving a lot of pages?"}
-              </p>
-              <sl-icon name="gear"></sl-icon>
-              <button
-                @click=${() => {
-                  this.pageCount = 0;
-                  this.hintMessage = "";
-                }}
-              >
-                X
-              </button>
-            </div>
-            <div class="text-pretty p-4">
-              ${this.hintMessage
-                ? html`
-                    <p class="mb-3">
-                      This page may not work as expected with
-                      <strong class="font-semibold">archivepage.now</strong>,
-                      which is a demo with reduced features.
-                    </p>
-                    <p>
-                      Try using
-                      <a
-                        class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-                        href="http://webrecorder.net/archivewebpage"
-                        target="_blank"
-                        >ArchiveWeb.page</a
-                      >
-                      instead!
-                    </p>
-                  `
-                : html`
-                    <p class="mb-3">
-                      You can automatically archive multiple pages and entire
-                      websites with
-                      <strong class="font-semibold">Browsertrix</strong>, our
-                      browser-based crawling service.
-                    </p>
-                    <div>
-                      <a
-                        class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-                        href="http://webrecorder.net/browsertrix"
-                        target="_blank"
-                        >Learn more</a
-                      >
-                      about how automated crawling can supplement a manual
-                      archiving workflow.
-                    </div>
-                  `}
-            </div>
-          </div>
+          ${this.showHint
+            ? html`
+                <div
+                  class="mb-16 max-w-sm rounded-lg border border-cyan-200/40 bg-white shadow-lg"
+                  role="alert"
+                  aria-live="polite"
+                >
+                  <div
+                    class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
+                  >
+                    <p class="font-semibold">${title}</p>
+                    <sl-icon name="gear"></sl-icon>
+                    <button
+                      @click=${() => {
+                        this.showHint = false;
+
+                        if (this.hintMessage) {
+                          this.hintMessage = "";
+                        } else if (overPageMin) {
+                          this.pageCount = 0;
+                        }
+                      }}
+                    >
+                      X
+                    </button>
+                  </div>
+                  <div class="text-pretty p-4">${message}</div>
+                </div>
+              `
+            : nothing}
         </div>
-        <img class="h-32 w-auto" src=${linkySrc} />
+        <button @click=${() => (this.showHint = !this.showHint)}>
+          <img class="h-32 w-auto" src=${linkySrc} />
+        </button>
       </div>
     `;
   }
