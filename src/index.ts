@@ -2,8 +2,6 @@ import { html, LitElement, nothing, PropertyValues } from "lit";
 
 import { customElement, query, state } from "lit/decorators.js";
 
-import { SlDialog } from "@shoelace-style/shoelace";
-
 import themeCSS from "./theme.stylesheet.css";
 import linkySrc from "./assets/linky-2.avif";
 
@@ -27,9 +25,6 @@ class ArchiveNow extends LitElement {
 
   @state()
   private pageCount = 0;
-
-  @query("sl-dialog")
-  private dialog?: SlDialog;
 
   private currUrl = "";
   private shownForUrl = false;
@@ -96,7 +91,6 @@ class ArchiveNow extends LitElement {
         !this.shownForUrl
       ) {
         this.shownForUrl = true;
-        this.dialog?.show();
       }
     });
   }
@@ -140,7 +134,9 @@ class ArchiveNow extends LitElement {
   }
 
   private renderHint() {
-    if (!this.hintMessage) return;
+    const overPageMin = this.pageCount > PAGE_COUNT_MIN;
+
+    if (!this.hintMessage && !overPageMin) return;
 
     return html`
       <div class="fixed bottom-8 right-3 flex items-end gap-4">
@@ -153,27 +149,58 @@ class ArchiveNow extends LitElement {
             <div
               class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
             >
-              <p class="font-semibold">Issues archiving this page?</p>
+              <p class="font-semibold">
+                ${this.hintMessage
+                  ? "Issues archiving this page?"
+                  : "Archiving a lot of pages?"}
+              </p>
               <sl-icon name="gear"></sl-icon>
-              <button @click=${() => (this.hintMessage = "")}>X</button>
+              <button
+                @click=${() => {
+                  this.pageCount = 0;
+                  this.hintMessage = "";
+                }}
+              >
+                X
+              </button>
             </div>
             <div class="text-pretty p-4">
-              <p class="mb-3">${this.hintMessage}</p>
-              <p class="mb-3">
-                This page may not work as expected with
-                <strong class="font-semibold">archivepage.now</strong>, which is
-                a demo with reduced features.
-              </p>
-              <p>
-                Try using
-                <a
-                  class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-                  href="http://webrecorder.net/archivewebpage"
-                  target="_blank"
-                  >ArchiveWeb.page</a
-                >
-                instead!
-              </p>
+              ${this.hintMessage
+                ? html`
+                    <p class="mb-3">
+                      This page may not work as expected with
+                      <strong class="font-semibold">archivepage.now</strong>,
+                      which is a demo with reduced features.
+                    </p>
+                    <p>
+                      Try using
+                      <a
+                        class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+                        href="http://webrecorder.net/archivewebpage"
+                        target="_blank"
+                        >ArchiveWeb.page</a
+                      >
+                      instead!
+                    </p>
+                  `
+                : html`
+                    <p class="mb-3">
+                      You can automatically archive multiple pages and entire
+                      websites with
+                      <strong class="font-semibold">Browsertrix</strong>, our
+                      browser-based crawling service.
+                    </p>
+                    <div>
+                      <a
+                        class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+                        href="http://webrecorder.net/browsertrix"
+                        target="_blank"
+                        >Learn more</a
+                      >
+                      about how automated crawling can supplement a manual
+                      archiving workflow.
+                    </div>
+                  `}
             </div>
           </div>
         </div>
