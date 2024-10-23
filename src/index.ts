@@ -1,13 +1,13 @@
 import { html, LitElement, nothing, PropertyValues } from "lit";
-
 import { customElement, query, state } from "lit/decorators.js";
+import type { SlAnimation } from "@shoelace-style/shoelace";
 
 import themeCSS from "./theme.stylesheet.css";
 import linkySrc from "./assets/linky-2.avif";
 
 import "./shoelace";
 
-const PAGE_COUNT_MIN = 4;
+const PAGE_COUNT_MIN = 3;
 
 @customElement("archive-now")
 class ArchiveNow extends LitElement {
@@ -27,9 +27,17 @@ class ArchiveNow extends LitElement {
   private showHint = true;
 
   @state()
+  private pageCount = 0;
+
+  @state()
   private pageUrls: string[] = [];
 
-  private pageCount = 0;
+  @query("#linkyAnimation")
+  private linkyAnimation?: SlAnimation;
+
+  @query("#hintAnimation")
+  private hintAnimation?: SlAnimation;
+
   private currUrl = "";
   private shownForUrl = false;
 
@@ -39,6 +47,30 @@ class ArchiveNow extends LitElement {
     const theme = new CSSStyleSheet();
     theme.replaceSync(themeCSS as string);
     this.shadowRoot?.adoptedStyleSheets.push(theme);
+  }
+
+  protected willUpdate(_changedProperties: PropertyValues): void {
+    if (
+      (_changedProperties.has("hintMessage") && this.hintMessage) ||
+      (_changedProperties.has("pageCount") && this.pageCount > PAGE_COUNT_MIN)
+    ) {
+      if (!this.showHint) {
+        this.showHint = true;
+      }
+
+      this.shakeLinky();
+    }
+
+    if (
+      _changedProperties.has("showHint") &&
+      _changedProperties.get("showHint") !== undefined
+    ) {
+      if (this.showHint) {
+        this.fadeInHint();
+      } else {
+        this.fadeOutHint();
+      }
+    }
   }
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
@@ -114,14 +146,14 @@ class ArchiveNow extends LitElement {
             url="https://example.com/"
           ></archive-web-page>`
         : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
-      ${this.isFinished || this.pageUrls.length > 0
+      ${this.isFinished || this.pageUrls.length > 1
         ? html`
             <div class="w-full max-w-md border-l p-4">
               ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
             </div>
           `
         : nothing}
-      ${this.renderHint()}
+      ${this.pageUrls.length > 0 ? this.renderHint() : 0}
     `;
   }
 
@@ -165,6 +197,7 @@ class ArchiveNow extends LitElement {
     if (this.hintMessage) {
       title = "Issues archiving this page?";
       message = html`
+        <p class="mb-3">${this.hintMessage}</p>
         <p class="mb-3">
           This page may not work as expected with
           <strong class="font-semibold">archivepage.now</strong>, which is a
@@ -203,44 +236,91 @@ class ArchiveNow extends LitElement {
     }
 
     return html`
-      <div class="fixed bottom-8 right-3 flex items-end gap-4">
+      <div class="fixed bottom-0 right-0 flex items-end p-3">
         <div>
-          ${this.showHint
-            ? html`
-                <div
-                  class="mb-16 max-w-sm rounded-lg border border-cyan-200/40 bg-white shadow-lg"
-                  role="alert"
-                  aria-live="polite"
-                >
-                  <div
-                    class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
-                  >
-                    <p class="font-semibold">${title}</p>
-                    <sl-icon name="gear"></sl-icon>
-                    <button
-                      @click=${() => {
-                        this.showHint = false;
+          <sl-animation
+            id="hintAnimation"
+            name="fadeIn"
+            easing="ease-in-out"
+            duration="200"
+            delay="1200"
+            iterations="1"
+            fill="both"
+            play
+          >
+            <div
+              class="mb-16 max-w-sm translate-x-1 rounded-lg border border-cyan-200/40 bg-white/80 shadow-lg backdrop-blur-md transition-all"
+            >
+              <div
+                class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
+                aria-live="polite"
+              >
+                <p class="font-semibold">${title}</p>
+                <sl-icon name="gear"></sl-icon>
+                <button
+                  @click=${() => {
+                    this.showHint = false;
 
-                        if (this.hintMessage) {
-                          this.hintMessage = "";
-                        } else if (overPageMin) {
-                          this.pageCount = 0;
-                        }
-                      }}
-                    >
-                      X
-                    </button>
-                  </div>
-                  <div class="text-pretty p-4">${message}</div>
-                </div>
-              `
-            : nothing}
+                    if (this.hintMessage) {
+                      this.hintMessage = "";
+                    } else if (overPageMin) {
+                      this.pageCount = 0;
+                    }
+                  }}
+                >
+                  X
+                </button>
+              </div>
+              <div class="text-pretty p-4">${message}</div>
+            </div>
+          </sl-animation>
         </div>
-        <button @click=${() => (this.showHint = !this.showHint)}>
-          <img class="h-auto w-24" src=${linkySrc} />
-        </button>
+        <sl-animation
+          id="linkyAnimation"
+          name="lightSpeedInRight"
+          easing="ease-in-out"
+          duration="1200"
+          delay="200"
+          iterations="1"
+          fill="backwards"
+          play
+        >
+          <button
+            class="origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
+            @click=${() => (this.showHint = !this.showHint)}
+            title="Toggle hint"
+          >
+            <img class="h-auto w-24" src=${linkySrc} />
+          </button>
+        </sl-animation>
       </div>
     `;
+  }
+
+  private fadeInHint() {
+    if (!this.hintAnimation || this.hintAnimation.play) return;
+
+    this.hintAnimation.delay = 0;
+    this.hintAnimation.name = "fadeIn";
+    this.hintAnimation.play = true;
+  }
+
+  private fadeOutHint() {
+    if (!this.hintAnimation || this.hintAnimation.play) return;
+
+    this.hintAnimation.delay = 0;
+    this.hintAnimation.name = "fadeOut";
+    this.hintAnimation.play = true;
+  }
+
+  private shakeLinky() {
+    if (!this.linkyAnimation || this.linkyAnimation.play) return;
+
+    this.linkyAnimation.delay = 0;
+    this.linkyAnimation.duration = 2000;
+    this.linkyAnimation.iterations = 2;
+    this.linkyAnimation.name = "jello";
+    this.linkyAnimation.play = true;
   }
 }
 
