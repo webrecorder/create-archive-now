@@ -7,7 +7,7 @@ import linkySrc from "./assets/linky-2.avif";
 
 import "./shoelace";
 
-const PAGE_COUNT_MIN = 3;
+const PAGE_COUNT_MIN = 10;
 
 @customElement("archive-now")
 class ArchiveNow extends LitElement {
@@ -146,9 +146,11 @@ class ArchiveNow extends LitElement {
             url="https://example.com/"
           ></archive-web-page>`
         : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
-      ${this.isFinished || this.pageUrls.length > 1
+      ${this.isFinished || this.pageUrls.length > 0
         ? html`
-            <div class="w-full max-w-md border-l p-4">
+            <div
+              class="w-full max-w-sm overflow-auto border-l-2 border-cyan-100/80 p-4"
+            >
               ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
             </div>
           `
@@ -175,13 +177,22 @@ class ArchiveNow extends LitElement {
   }
 
   private renderPageUrls() {
-    return html`<h2 class="mb-3 text-lg font-semibold">
-        Archiving ${this.pageUrls.length.toLocaleString()} Pages
+    return html`<h2 class="mb-3 font-semibold text-stone-700">
+        Archiving ${this.pageUrls.length.toLocaleString()}
+        ${this.pageUrls.length === 1 ? "page" : "pages"}
       </h2>
-      <ul class="divide-y font-monospace text-sm">
+      <ul class="divide-y font-monospace text-sm text-stone-600">
         ${this.pageUrls
           .sort()
-          .map((url) => html` <li class="py-1">${url}</li> `)}
+          .map(
+            (url) => html`
+              <li
+                class="cursor-pointer truncate py-1 hover:overflow-visible hover:whitespace-normal hover:break-all"
+              >
+                ${url}
+              </li>
+            `,
+          )}
       </ul> `;
   }
 
@@ -236,7 +247,9 @@ class ArchiveNow extends LitElement {
     }
 
     return html`
-      <div class="fixed bottom-0 right-0 flex items-end p-3">
+      <div
+        class="pointer-events-none fixed bottom-0 right-0 flex items-end p-3"
+      >
         <div>
           <sl-animation
             id="hintAnimation"
@@ -249,15 +262,18 @@ class ArchiveNow extends LitElement {
             play
           >
             <div
-              class="mb-16 max-w-sm translate-x-1 rounded-lg border border-cyan-200/40 bg-white/80 shadow-lg backdrop-blur-md transition-all"
+              class="mb-16 max-w-sm translate-x-1 rounded-lg border border-cyan-100/80 bg-white/80 shadow-lg backdrop-blur-md transition-all"
             >
               <div
-                class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
+                class="flex items-center justify-between border-b border-cyan-100/80 p-4 px-4 leading-none"
                 aria-live="polite"
               >
                 <p class="font-semibold">${title}</p>
                 <sl-icon name="gear"></sl-icon>
                 <button
+                  class=${this.showHint
+                    ? "pointer-events-auto"
+                    : "pointer-events-none"}
                   @click=${() => {
                     this.showHint = false;
 
@@ -286,7 +302,7 @@ class ArchiveNow extends LitElement {
           play
         >
           <button
-            class="origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
+            class="pointer-events-auto origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
             @click=${() => (this.showHint = !this.showHint)}
             title="Toggle hint"
           >
