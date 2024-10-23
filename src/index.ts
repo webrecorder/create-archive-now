@@ -24,11 +24,12 @@ class ArchiveNow extends LitElement {
   private hintMessage = "";
 
   @state()
-  private pageCount = 0;
-
-  @state()
   private showHint = true;
 
+  @state()
+  private pageUrls: string[] = [];
+
+  private pageCount = 0;
   private currUrl = "";
   private shownForUrl = false;
 
@@ -81,6 +82,10 @@ class ArchiveNow extends LitElement {
           break;
 
         case "urlchange":
+          if (!this.pageUrls.includes(event.data.url)) {
+            this.pageUrls = [...this.pageUrls, event.data.url];
+          }
+
           this.hintMessage = "";
           if (this.currUrl !== event.data.url) {
             this.shownForUrl = false;
@@ -109,38 +114,53 @@ class ArchiveNow extends LitElement {
             url="https://example.com/"
           ></archive-web-page>`
         : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
-      <div class="w-96 p-4">
-        ${!this.isFinished
-          ? html`
-              <h2>High-Fidelity Archiving in your Browser</h2>
-              <p>Everything you see loaded on the left is being archived!</p>
-
-              <p>When you're done, click <b>Finish</b></p>
-            `
-          : html`
-              <h2>Replaying Archives</h2>
-
-              <p>
-                Now, everything you see on the left is being loaded from the
-                archive you just created.
-              </p>
-
-              <p>
-                <sl-button href="${this.downloadUrl}" target="_blank"
-                  >Download your archive</sl-button
-                >
-              </p>
-            `}
-      </div>
+      ${this.isFinished || this.pageUrls.length > 0
+        ? html`
+            <div class="w-full max-w-md border-l p-4">
+              ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
+            </div>
+          `
+        : nothing}
       ${this.renderHint()}
     `;
   }
 
+  private renderFinished() {
+    return html`
+      <h2>Replaying Archives</h2>
+
+      <p>
+        Now, everything you see on the left is being loaded from the archive you
+        just created.
+      </p>
+
+      <p>
+        <sl-button href="${this.downloadUrl}" target="_blank"
+          >Download your archive</sl-button
+        >
+      </p>
+    `;
+  }
+
+  private renderPageUrls() {
+    return html`<h2 class="mb-3 text-lg font-semibold">
+        Archiving ${this.pageUrls.length.toLocaleString()} Pages
+      </h2>
+      <ul class="divide-y font-monospace text-sm">
+        ${this.pageUrls
+          .sort()
+          .map((url) => html` <li class="py-1">${url}</li> `)}
+      </ul> `;
+  }
+
   private renderHint() {
     const overPageMin = this.pageCount > PAGE_COUNT_MIN;
-    let title = "Let's archive this website!";
-    let message = html`Browse the website like you would normally. Every time
-    you follow a link, the newly loaded page will be added to your archive.`;
+    let title = "Let’s archive this website!";
+    let message = html`<p class="mb-3">
+        Browse with the website like you would normally. Everything you see
+        loaded is being archived.
+      </p>
+      <p>When you’re done, click <strong>Finish</strong>.</p> `;
 
     if (this.hintMessage) {
       title = "Issues archiving this page?";
@@ -217,7 +237,7 @@ class ArchiveNow extends LitElement {
             : nothing}
         </div>
         <button @click=${() => (this.showHint = !this.showHint)}>
-          <img class="h-32 w-auto" src=${linkySrc} />
+          <img class="h-auto w-24" src=${linkySrc} />
         </button>
       </div>
     `;
