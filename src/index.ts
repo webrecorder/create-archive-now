@@ -1,10 +1,9 @@
-import { html, LitElement, PropertyValues } from "lit";
+import { html, LitElement, nothing, PropertyValues } from "lit";
 
 import { customElement, query, state } from "lit/decorators.js";
 
-import { SlDialog } from "@shoelace-style/shoelace";
-
 import themeCSS from "./theme.stylesheet.css";
+import linkySrc from "./assets/linky-2.avif";
 
 import "./shoelace";
 
@@ -27,8 +26,8 @@ class ArchiveNow extends LitElement {
   @state()
   private pageCount = 0;
 
-  @query("sl-dialog")
-  private dialog?: SlDialog;
+  @state()
+  private showHint = true;
 
   private currUrl = "";
   private shownForUrl = false;
@@ -59,7 +58,7 @@ class ArchiveNow extends LitElement {
               "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
             this.hintMessage =
-              "It looks like you're been rate limited (by this site, not by us!).";
+              "It looks like you're been rate limited (by this site, not by us!)";
           } else {
             this.hintMessage = "It looks like this page could not be loaded.";
           }
@@ -67,7 +66,7 @@ class ArchiveNow extends LitElement {
 
         case "rate-limited":
           this.hintMessage =
-            "It looks like you're been rate limited (by this site, not by us!).";
+            "It looks like you're been rate limited (by this site, not by us!)";
           break;
 
         case "post-request-failed":
@@ -95,13 +94,13 @@ class ArchiveNow extends LitElement {
         !this.shownForUrl
       ) {
         this.shownForUrl = true;
-        this.dialog?.show();
       }
     });
   }
 
   render() {
-    return html` ${!this.isFinished
+    return html`
+      ${!this.isFinished
         ? html` <archive-web-page
             proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
             sandbox="true"
@@ -117,7 +116,6 @@ class ArchiveNow extends LitElement {
               <p>Everything you see loaded on the left is being archived!</p>
 
               <p>When you're done, click <b>Finish</b></p>
-              ${this.renderDialogs()}
             `
           : html`
               <h2>Replaying Archives</h2>
@@ -133,43 +131,96 @@ class ArchiveNow extends LitElement {
                 >
               </p>
             `}
-      </div>`;
-  }
-
-  renderDialogs() {
-    return html`
-      <sl-dialog label="Suggestion" class="dialog-width" style="--width: 50vw;">
-        ${this.hintMessage
-          ? html` <p>${this.hintMessage}</p>
-              <p>
-                This is an archiving demo that runs through a proxy and many
-                things don't quite work.
-              </p>
-              <p>For better results, try our ArchiveWeb.page extension.</p>`
-          : ``}
-        ${this.pageCount > PAGE_COUNT_MIN
-          ? html`
-              <p>
-                It looks like you're trying to archive multiple pages. While
-                it's possible to do it with this demo, the Browsertrix service
-                will make this a lot easier!
-              </p>
-            `
-          : ``}
-        <sl-button
-          slot="footer"
-          variant="primary"
-          @click="${this.onCloseDialog}"
-          >Close</sl-button
-        >
-      </sl-dialog>
+      </div>
+      ${this.renderHint()}
     `;
   }
 
-  onCloseDialog() {
-    this.dialog?.hide();
-    this.pageCount = 0;
-    this.hintMessage = "";
+  private renderHint() {
+    const overPageMin = this.pageCount > PAGE_COUNT_MIN;
+    let title = "Let's archive this website!";
+    let message = html`Browse the website like you would normally. Every time
+    you follow a link, the newly loaded page will be added to your archive.`;
+
+    if (this.hintMessage) {
+      title = "Issues archiving this page?";
+      message = html`
+        <p class="mb-3">
+          This page may not work as expected with
+          <strong class="font-semibold">archivepage.now</strong>, which is a
+          demo with reduced features.
+        </p>
+        <p>
+          Try using
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://webrecorder.net/archivewebpage"
+            target="_blank"
+            >ArchiveWeb.page</a
+          >
+          instead!
+        </p>
+      `;
+    } else if (overPageMin) {
+      title = "Archiving a lot of pages?";
+      message = html`
+        <p class="mb-3">
+          You can automatically archive multiple pages and entire websites with
+          <strong class="font-semibold">Browsertrix</strong>, our browser-based
+          crawling service.
+        </p>
+        <div>
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://webrecorder.net/browsertrix"
+            target="_blank"
+            >Learn more</a
+          >
+          about how automated crawling can supplement a manual archiving
+          workflow.
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="fixed bottom-8 right-3 flex items-end gap-4">
+        <div>
+          ${this.showHint
+            ? html`
+                <div
+                  class="mb-16 max-w-sm rounded-lg border border-cyan-200/40 bg-white shadow-lg"
+                  role="alert"
+                  aria-live="polite"
+                >
+                  <div
+                    class="flex items-center justify-between border-b border-cyan-200/40 p-4 px-4 leading-none"
+                  >
+                    <p class="font-semibold">${title}</p>
+                    <sl-icon name="gear"></sl-icon>
+                    <button
+                      @click=${() => {
+                        this.showHint = false;
+
+                        if (this.hintMessage) {
+                          this.hintMessage = "";
+                        } else if (overPageMin) {
+                          this.pageCount = 0;
+                        }
+                      }}
+                    >
+                      X
+                    </button>
+                  </div>
+                  <div class="text-pretty p-4">${message}</div>
+                </div>
+              `
+            : nothing}
+        </div>
+        <button @click=${() => (this.showHint = !this.showHint)}>
+          <img class="h-32 w-auto" src=${linkySrc} />
+        </button>
+      </div>
+    `;
   }
 }
 
