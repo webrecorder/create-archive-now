@@ -9,6 +9,11 @@ import "./shoelace";
 
 const PAGE_COUNT_MIN = 10;
 
+type PageUrl = {
+  url: string;
+  ts: number;
+};
+
 @customElement("archive-now")
 class ArchiveNow extends LitElement {
   @state()
@@ -30,7 +35,7 @@ class ArchiveNow extends LitElement {
   private pageCount = 0;
 
   @state()
-  private pageUrls = new Set();
+  private pageUrls : string[] = [];
 
   @query("#linkyAnimation")
   private linkyAnimation?: SlAnimation;
@@ -95,8 +100,12 @@ class ArchiveNow extends LitElement {
           } else {
             this.hintMessage = "It looks like this page could not be loaded.";
           }
-          this.pageUrls.delete(this.currUrl);
           this.pageCount--;
+          // const inx = this.pageUrls.indexOf(this.currUrl);
+          // if (inx >= 0) {
+          //   this.pageUrls = [...this.pageUrls.splice(inx)];
+          //   this.pageCount--;
+          // }
           break;
 
         case "rate-limited":
@@ -112,12 +121,14 @@ class ArchiveNow extends LitElement {
         case "page-loading":
           if (!event.data.loading) {
             this.pageCount++;
+            void this.updatePages();
           }
           break;
 
         case "urlchange":
-          this.pageUrls.add(event.data.url);
-
+          // if (this.currUrl) {
+          //   this.pageUrls = [this.currUrl, ...this.pageUrls];
+          // }
           this.hintMessage = "";
           if (this.currUrl !== event.data.url) {
             this.shownForUrl = false;
@@ -133,6 +144,21 @@ class ArchiveNow extends LitElement {
         this.shownForUrl = true;
       }
     });
+  }
+
+  async updatePages() {
+    const win = (this.renderRoot?.querySelector("archive-web-page") as any | null)?.renderRoot?.querySelector("iframe")?.contentWindow;
+    if (!win) {
+      return;
+    }
+
+    const resp = await win.fetch(`./w/api/c/${this.collId}?all=1`);
+    try {
+      const { pages } = await resp.json();
+      this.pageUrls = pages.map((page: {url: string}) => page.url);
+    } catch (e) {
+      // ignore
+    }
   }
 
   render() {
@@ -151,7 +177,7 @@ class ArchiveNow extends LitElement {
             >
               ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
             </div>
-      ${this.pageUrls.size > 0 ? this.renderHint() : ""}
+      ${this.pageUrls.length > 0 ? this.renderHint() : ""}
     `;
   }
 
@@ -174,12 +200,11 @@ class ArchiveNow extends LitElement {
 
   private renderPageUrls() {
     return html`<h2 class="mb-3 font-semibold text-stone-700">
-        Archived ${this.pageUrls.size.toLocaleString()}
-        ${this.pageUrls.size === 1 ? "page" : "pages"}
+        Archived ${this.pageUrls.length.toLocaleString()}
+        ${this.pageUrls.length === 1 ? "page" : "pages"}
       </h2>
       <ul class="divide-y font-monospace text-sm text-stone-600">
         ${Array.from(this.pageUrls.values())
-          .sort()
           .map(
             (url) => html`
               <li
@@ -199,26 +224,24 @@ class ArchiveNow extends LitElement {
         Browse with the website like you would normally. Everything you see
         loaded is being archived.
       </p>
-      <p>When you’re done, click <strong>Finish</strong>.</p> `;
+      <p>When you're done, click <strong>Finish</strong>.</p> `;
 
     if (this.hintMessage) {
       title = "Issues archiving this page?";
       message = html`
         <p class="mb-3">${this.hintMessage}</p>
         <p class="mb-3">
-          This page may not work as expected with
-          <strong class="font-semibold">archivepage.now</strong>, which is a
-          demo with reduced features.
+          This page may not work as expected in this limited demo.
         </p>
         <p>
-          Try using
+          For more comprehensive archiving, try using our
           <a
             class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
             href="http://webrecorder.net/archivewebpage"
             target="_blank"
             >ArchiveWeb.page</a
-          >
-          instead!
+          > browser extension
+          instead (it's free too!)
         </p>
       `;
     } else if (overPageMin) {
