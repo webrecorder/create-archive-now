@@ -856,10 +856,10 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.5.tgz#325db42395cd49fe6c14057f9a900e427df8810e"
   integrity sha512-lqaoKnRYBdo1UgDX8uF24AfGMifWK19TxPmM5FHc2vAGxrJ/qtyUyFBWoY1tISZdelsQ5fBcOusifo5o5wSJxQ==
 
-"@webrecorder/archivewebpage@^0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@webrecorder/archivewebpage/-/archivewebpage-0.13.0.tgz#19f240f86cc0fca1d14637de5340933bf36322e9"
-  integrity sha512-evWhQddQ4JkseL8B++Hasx/1p5YmOVEfFgT8hHUaQqmE5z6tQtBpmFXoq0t/41C3KrCCNh2RM+DH9cWWQeKP7Q==
+"@webrecorder/archivewebpage@^0.13.1":
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/@webrecorder/archivewebpage/-/archivewebpage-0.13.1.tgz#5903663ede9d5b867960a39cab26dcb44a5fa565"
+  integrity sha512-Gn2I6FC7Lg1bYgkC2Y4sAPJC2fTN5UYsu7HyWm1YqE+pyHaQ8/6/xKFlwgxdCJcjRauqy2V95uRDopYrUb9xZw==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.13.0"
     "@ipld/car" "^5.3.1"

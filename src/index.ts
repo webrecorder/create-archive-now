@@ -30,7 +30,7 @@ class ArchiveNow extends LitElement {
   private pageCount = 0;
 
   @state()
-  private pageUrls: string[] = [];
+  private pageUrls = new Set();
 
   @query("#linkyAnimation")
   private linkyAnimation?: SlAnimation;
@@ -95,6 +95,8 @@ class ArchiveNow extends LitElement {
           } else {
             this.hintMessage = "It looks like this page could not be loaded.";
           }
+          this.pageUrls.delete(this.currUrl);
+          this.pageCount--;
           break;
 
         case "rate-limited":
@@ -114,9 +116,7 @@ class ArchiveNow extends LitElement {
           break;
 
         case "urlchange":
-          if (!this.pageUrls.includes(event.data.url)) {
-            this.pageUrls = [...this.pageUrls, event.data.url];
-          }
+          this.pageUrls.add(event.data.url);
 
           this.hintMessage = "";
           if (this.currUrl !== event.data.url) {
@@ -146,16 +146,12 @@ class ArchiveNow extends LitElement {
             url="https://example.com/"
           ></archive-web-page>`
         : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
-      ${this.isFinished || this.pageUrls.length > 0
-        ? html`
             <div
               class="w-full max-w-sm overflow-auto border-l-2 border-cyan-100/80 p-4"
             >
               ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
             </div>
-          `
-        : nothing}
-      ${this.pageUrls.length > 0 ? this.renderHint() : 0}
+      ${this.pageUrls.size > 0 ? this.renderHint() : ""}
     `;
   }
 
@@ -178,11 +174,11 @@ class ArchiveNow extends LitElement {
 
   private renderPageUrls() {
     return html`<h2 class="mb-3 font-semibold text-stone-700">
-        Archiving ${this.pageUrls.length.toLocaleString()}
-        ${this.pageUrls.length === 1 ? "page" : "pages"}
+        Archived ${this.pageUrls.size.toLocaleString()}
+        ${this.pageUrls.size === 1 ? "page" : "pages"}
       </h2>
       <ul class="divide-y font-monospace text-sm text-stone-600">
-        ${this.pageUrls
+        ${Array.from(this.pageUrls.values())
           .sort()
           .map(
             (url) => html`
