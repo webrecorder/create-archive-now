@@ -28,7 +28,7 @@ module.exports = {
     compress: true,
     port: 10001,
     open: true,
-    static: __dirname,
+    static: path.join(__dirname, "dist"),
     hot: true,
   },
 
@@ -104,7 +104,9 @@ module.exports = {
           ),
           to: path.resolve(__dirname, "dist/shoelace/assets"),
         },
-      ],
+        { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/ui.js", to: path.resolve(__dirname, "dist/awp-ui.js") },
+        { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/replay/sw.js", to: path.resolve(__dirname, "dist/replay/sw.js") }
+       ],
     }),
     new HtmlWebpackPlugin({
       title: "Archive Now",
