@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webrecorder/express.archiveweb.page.git"
+    "url": "git+https://github.com/webrecorder/archive-now.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/webrecorder/express.archiveweb.page/issues"
+    "url": "https://github.com/webrecorder/archive-now/issues"
   },
-  "homepage": "https://github.com/webrecorder/express.archiveweb.page#readme",
+  "homepage": "https://github.com/webrecorder/archive-now#readme",
   "dependencies": {
     "@shoelace-style/shoelace": "^2.17.1",
     "@webrecorder/archivewebpage": "^0.13.1",
