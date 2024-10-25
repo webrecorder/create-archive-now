@@ -1,0 +1,41 @@
+/*! 'index.js is part of ReplayWeb.page (https://replayweb.page) Copyright (C) 2020-2024, Webrecorder Software. Licensed under the Affero General Public License v3.' */
+
+/*! ui.js is part of the Webrecorder ArchiveWeb.page (https://archiveweb.page) Copyright (C) 2020-2024, Webrecorder Software. Licensed under the Affero General Public License v3. */
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/**!
+ * FlexSearch.js v0.7.31 (Bundle)
+ * Copyright 2018-2022 Nextapps GmbH
+ * Author: Thomas Wilkerling
+ * Licence: Apache-2.0
+ * https://github.com/nextapps-de/flexsearch
+ */
