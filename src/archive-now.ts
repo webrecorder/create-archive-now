@@ -352,7 +352,7 @@ class ArchiveNow extends LitElement {
           size="large"
         >
           <sl-icon slot="prefix" name="share"></sl-icon>
-          Share with Browsertrix
+          Sign up for Browsertrix
         </sl-button>
       </div>
     `;
