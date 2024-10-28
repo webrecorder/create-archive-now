@@ -291,8 +291,10 @@ class ArchiveNow extends LitElement {
             ></archive-web-page>`
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
-      <div class="overflow-auto [grid-area:detail]">
-        <h2 class="my-4 font-display text-2xl font-semibold leading-none">
+      <div class="mr-16 overflow-auto [grid-area:detail] lg:mr-0">
+        <h2
+          class="my-4 font-display text-xl font-semibold leading-none lg:text-2xl"
+        >
           Your Web Archive
         </h2>
         ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
@@ -301,7 +303,7 @@ class ArchiveNow extends LitElement {
       ${this.renderBackdrop()}
 
       <div
-        class="absolute bottom-0 right-0 size-24 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
+        class="pointer-events-none absolute bottom-0 right-0 size-24 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
       ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
     `;
@@ -370,9 +372,7 @@ class ArchiveNow extends LitElement {
     return html`
       <div
         id="hintContainer"
-        class="${this.showHint
-          ? "pointer-events-auto"
-          : "pointer-events-none"} fixed bottom-0 right-0 flex items-end"
+        class="pointer-events-none fixed bottom-0 right-0 flex flex-col items-end lg:flex-row"
       >
         <div>
           <sl-animation
@@ -391,7 +391,9 @@ class ArchiveNow extends LitElement {
             }}
           >
             <div
-              class="mb-16 max-w-sm translate-x-1 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all"
+              class="${this.showHint
+                ? "pointer-events-auto"
+                : "pointer-events-none"} max-w-sm -translate-x-3 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all lg:mb-16 lg:translate-x-1"
             >
               <div
                 class="flex items-center justify-between p-2 leading-none"
@@ -426,7 +428,7 @@ class ArchiveNow extends LitElement {
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
-              <img class="h-auto w-24" src=${linkySrc} />
+              <img class="h-auto w-16 lg:w-24" src=${linkySrc} />
             </button>
           </sl-animation>
         </div>
