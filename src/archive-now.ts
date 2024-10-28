@@ -60,20 +60,24 @@ class ArchiveNow extends LitElement {
 
   private hintMessages: Record<Hint, TemplateResult> = {
     "first-load": html`<p class="mb-3">
-        Browse and interact with the website like you would normally. Every new
-        page that you visit will be archived.
+        Browse and interact with the website like you would normally. Every link
+        that you follow will be archived.
       </p>
       <p>
         When you’re done, click the
-        <strong class="text-brand-green">Finish</strong> button.
+        <strong class="font-semibold text-brand-green">Finish</strong> button.
       </p>`,
-    "page-load": html` <p class="mb-3">
-        All the pages listed will be included in your archive.
+    "page-load": html`<p class="mb-3">
+        All the pages visited so far will be included in your archive.
+      </p>
+      <p class="mb-3">
+        You can also enter in a new URL to load any page that’s not linked from
+        the page you’re currently viewing.
       </p>
       <p>
         Click
-        <strong class="text-brand-green">Finish</strong> to finalize your
-        archive.
+        <strong class="font-semibold text-brand-green">Finish</strong> to
+        finalize your archive.
       </p>`,
     error: html`
       <p class="mb-3">
@@ -87,7 +91,7 @@ class ArchiveNow extends LitElement {
           target="_blank"
           >ArchiveWeb.page</a
         >
-        browser extension instead (it's free too!)
+        browser extension instead (it’s free, too!)
       </p>
     `,
     "over-page-min": html`
@@ -159,11 +163,13 @@ class ArchiveNow extends LitElement {
       this.hint = "finished";
 
       if (!this.showHint) {
-        this.shakeLinky();
         this.showHint = true;
       }
 
-      this.showBackdrop();
+      window.requestAnimationFrame(() => {
+        this.showBackdrop();
+      });
+
       // this.removeLinky();
     }
 
@@ -174,8 +180,8 @@ class ArchiveNow extends LitElement {
       if (this.showHint) {
         this.fadeInHint();
       } else {
-        this.fadeOutHint();
         this.hideBackdrop();
+        this.fadeOutHint();
       }
     }
   }
@@ -198,7 +204,7 @@ class ArchiveNow extends LitElement {
               "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
             this.errorMessage =
-              "It looks like you're been rate limited (by this site, not by us!)";
+              "It looks like you’ve been rate limited (by this site, not by us.)";
           } else {
             this.errorMessage = "It looks like this page could not be loaded.";
           }
@@ -212,12 +218,12 @@ class ArchiveNow extends LitElement {
 
         case "rate-limited":
           this.errorMessage =
-            "It looks like you're been rate limited (by this site, not by us!)";
+            "It looks like you’ve been rate limited (by this site, not by us.)";
           break;
 
         case "post-request-failed":
           this.errorMessage =
-            "It looks like you're trying to log in to a site or access social media.";
+            "It looks like you’re trying to log in to a site or access social media.";
           break;
 
         case "page-loading":
@@ -352,9 +358,15 @@ class ArchiveNow extends LitElement {
       case "error": {
         title = "Issues archiving this page?";
         message = html`
-          <p class="mb-3">${this.errorMessage}</p>
+          ${this.errorMessage
+            ? html`<p class="mb-3">${this.errorMessage}</p>`
+            : nothing}
           ${message}
         `;
+        break;
+      }
+      case "page-load": {
+        title = "Interact to archive";
         break;
       }
       case "over-page-min": {
@@ -481,7 +493,8 @@ class ArchiveNow extends LitElement {
   }
 
   private showBackdrop() {
-    if (!this.hintBackdrop) return;
+    if (!this.hintBackdrop || this.hintBackdrop.style.display === "block")
+      return;
 
     this.hintBackdrop.style.display = "block";
 
@@ -491,7 +504,8 @@ class ArchiveNow extends LitElement {
   }
 
   private hideBackdrop() {
-    if (!this.hintBackdrop) return;
+    if (!this.hintBackdrop || this.hintBackdrop.style.display === "none")
+      return;
 
     const onTransitionEnd = (e: TransitionEvent) => {
       if (e.propertyName === "opacity" && this.hintBackdrop) {
