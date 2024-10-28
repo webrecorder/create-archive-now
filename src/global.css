@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply w-full overflow-hidden bg-earth-50 p-4 text-stone-700;
+    @apply w-full overflow-hidden bg-earth-25 p-4 text-stone-700;
   }
 }
 
