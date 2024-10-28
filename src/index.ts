@@ -6,6 +6,7 @@ import themeCSS from "./theme.stylesheet.css";
 import linkySrc from "./assets/linky-2.avif";
 
 import "./shoelace";
+import "./global.css";
 
 const PAGE_COUNT_MIN = 10;
 
@@ -35,7 +36,7 @@ class ArchiveNow extends LitElement {
   private pageCount = 0;
 
   @state()
-  private pageUrls : string[] = [];
+  private pageUrls: string[] = [];
 
   @query("#linkyAnimation")
   private linkyAnimation?: SlAnimation;
@@ -147,7 +148,9 @@ class ArchiveNow extends LitElement {
   }
 
   async updatePages() {
-    const win = (this.renderRoot?.querySelector("archive-web-page") as any | null)?.renderRoot?.querySelector("iframe")?.contentWindow;
+    const win = (
+      this.renderRoot?.querySelector("archive-web-page") as any | null
+    )?.renderRoot?.querySelector("iframe")?.contentWindow;
     if (!win) {
       return;
     }
@@ -155,7 +158,7 @@ class ArchiveNow extends LitElement {
     const resp = await win.fetch(`./w/api/c/${this.collId}?all=1`);
     try {
       const { pages } = await resp.json();
-      this.pageUrls = pages.map((page: {url: string}) => page.url);
+      this.pageUrls = pages.map((page: { url: string }) => page.url);
     } catch (e) {
       // ignore
     }
@@ -172,11 +175,11 @@ class ArchiveNow extends LitElement {
             url="https://example.com/"
           ></archive-web-page>`
         : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
-            <div
-              class="w-full max-w-sm overflow-auto border-l-2 border-cyan-100/80 p-4"
-            >
-              ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
-            </div>
+      <div
+        class="w-full max-w-sm overflow-auto border-l-2 border-cyan-100/80 p-4"
+      >
+        ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
+      </div>
       ${this.pageUrls.length > 0 ? this.renderHint() : ""}
     `;
   }
@@ -204,16 +207,15 @@ class ArchiveNow extends LitElement {
         ${this.pageUrls.length === 1 ? "page" : "pages"}
       </h2>
       <ul class="divide-y font-monospace text-sm text-stone-600">
-        ${Array.from(this.pageUrls.values())
-          .map(
-            (url) => html`
-              <li
-                class="cursor-pointer truncate py-1 hover:overflow-visible hover:whitespace-normal hover:break-all"
-              >
-                ${url}
-              </li>
-            `,
-          )}
+        ${Array.from(this.pageUrls.values()).map(
+          (url) => html`
+            <li
+              class="cursor-pointer truncate py-1 hover:overflow-visible hover:whitespace-normal hover:break-all"
+            >
+              ${url}
+            </li>
+          `,
+        )}
       </ul> `;
   }
 
@@ -240,8 +242,8 @@ class ArchiveNow extends LitElement {
             href="http://webrecorder.net/archivewebpage"
             target="_blank"
             >ArchiveWeb.page</a
-          > browser extension
-          instead (it's free too!)
+          >
+          browser extension instead (it's free too!)
         </p>
       `;
     } else if (overPageMin) {

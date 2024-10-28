@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply flex size-full;
+  }
+
+  body {
+    @apply w-full;
+  }
+}
+
+@layer components {
+  archive-now {
+    @apply flex h-full flex-col;
+  }
+
+  @media screen(lg) {
+    archive-now {
+      @apply flex-row;
+    }
+  }
+}
