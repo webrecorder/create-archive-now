@@ -8,18 +8,35 @@
   }
 
   body {
-    @apply w-full;
+    @apply w-full overflow-hidden bg-earth-25 p-4 text-stone-700;
   }
 }
 
 @layer components {
   archive-now {
-    @apply flex h-full flex-col;
+    @apply grid h-full gap-x-4 gap-y-3;
+    grid-template-areas:
+      "header"
+      "archive"
+      "detail";
+    grid-template-rows: min-content 1fr theme(size.48);
+    grid-template-columns: 1fr;
   }
 
   @media screen(lg) {
     archive-now {
-      @apply flex-row;
+      grid-template-areas:
+        "header header"
+        "archive detail";
+      grid-template-rows: min-content 1fr;
+      grid-template-columns: 1fr theme(size.80);
+    }
+  }
+
+  @media screen(xl) {
+    archive-now {
+      @apply gap-x-10;
+      grid-template-columns: 1fr theme(size.96);
     }
   }
 }
