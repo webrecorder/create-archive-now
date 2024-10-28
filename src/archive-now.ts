@@ -112,17 +112,13 @@ class ArchiveNow extends LitElement {
     `,
     finished: html`
       <p class="mb-3">
-        Everything you can see here is now being rendered from your web archive
-        without the involvement of the original server.
+        All the pages you see now are loaded directly from your web archive,
+        bypassing the Internet.
       </p>
       <p class="mb-3">
-        To share a link to this archive, import it to
-        <strong class="font-semibold">Browsertrix</strong> and add it to a
-        collection.
-      </p>
-      <p class="mb-3">
-        You can also download your archive and view it at any time with
-        <strong class="font-semibold">ReplayWeb.page</strong>.
+        You can test this out by disabling your Wi-Fi or mobile data and then
+        browsing the archive! (Just don’t forget to re-enable your Internet
+        connection to download the archive. 😉)
       </p>
     `,
   };
@@ -317,14 +313,47 @@ class ArchiveNow extends LitElement {
 
   private renderFinished() {
     return html`
-      <div>
+      <div class="mb-4 text-pretty leading-relaxed">
+        <p class="mb-3">
+          Download your archive and view it at any time with
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://replayweb.page"
+            target="_blank"
+            >ReplayWeb.page</a
+          >.
+        </p>
+        <p>
+          To share your archive, you can create a public web archive collection
+          with
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://webrecorder.net/browsertrix"
+            target="_blank"
+            >Browsertrix</a
+          >.
+        </p>
+      </div>
+      <div class="flex flex-col gap-3">
         <sl-button
+          class="w-full"
           href="${this.downloadUrl}"
+          target="_blank"
+          size="large"
+        >
+          <sl-icon slot="prefix" name="download"></sl-icon>
+          Download Archive
+        </sl-button>
+        <sl-button
+          class="w-full"
+          href="https://webrecorder.net/browsertrix#get-started"
           target="_blank"
           variant="primary"
           size="large"
-          >Download Archive</sl-button
         >
+          <sl-icon slot="prefix" name="share"></sl-icon>
+          Share with Browsertrix
+        </sl-button>
       </div>
     `;
   }

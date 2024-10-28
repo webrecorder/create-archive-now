@@ -39,4 +39,8 @@
       grid-template-columns: 1fr theme(size.96);
     }
   }
+
+  sl-button[variant="primary"]::part(base) {
+    background-color: theme(colors.cyan.500);
+  }
 }
