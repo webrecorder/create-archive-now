@@ -432,7 +432,7 @@ class ArchiveNow extends LitElement {
       id="hintBackdrop"
       class="${this.backdropVisible
         ? "opacity-1"
-        : "opacity-0"} fixed inset-0 bg-cyan-900/20 transition-opacity"
+        : "opacity-0"} fixed inset-0 bg-cyan-900/30 transition-opacity"
     ></div>`;
   }
 
