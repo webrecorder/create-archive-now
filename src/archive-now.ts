@@ -54,6 +54,9 @@ class ArchiveNow extends LitElement {
   @state()
   private pageUrls: string[] = [];
 
+  @query("#hintContainer")
+  private hintContainer?: HTMLDivElement;
+
   @query("#hintBackdrop")
   private hintBackdrop?: HTMLDivElement;
 
@@ -122,6 +125,12 @@ class ArchiveNow extends LitElement {
     const theme = new CSSStyleSheet();
     theme.replaceSync(themeCSS as string);
     this.shadowRoot?.adoptedStyleSheets.push(theme);
+
+    this.addEventListener("click", this.hideHintOnClickOutside);
+  }
+
+  disconnectedCallback(): void {
+    this.removeEventListener("click", this.hideHintOnClickOutside);
   }
 
   protected willUpdate(_changedProperties: PropertyValues): void {
@@ -248,7 +257,7 @@ class ArchiveNow extends LitElement {
 
   render() {
     return html`
-      <header class="[grid-area:header]">
+      <header class="flex items-center justify-between [grid-area:header]">
         <a
           class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
           href="https://webrecorder.net"
@@ -351,6 +360,7 @@ class ArchiveNow extends LitElement {
 
     return html`
       <div
+        id="hintContainer"
         class="${this.showHint
           ? "pointer-events-auto"
           : "pointer-events-none"} fixed bottom-0 right-0 flex items-end"
@@ -423,9 +433,6 @@ class ArchiveNow extends LitElement {
       class="${this.backdropVisible
         ? "opacity-1"
         : "opacity-0"} fixed inset-0 bg-cyan-900/20 transition-opacity"
-      @click=${() => {
-        this.showHint = false;
-      }}
     ></div>`;
   }
 
@@ -496,6 +503,22 @@ class ArchiveNow extends LitElement {
     this.linkyAnimation.iterations = 2;
     this.linkyAnimation.name = "jello";
     this.linkyAnimation.play = true;
+  }
+
+  private hideHintOnClickOutside(e: MouseEvent) {
+    const el = e.composedPath()[0];
+
+    if (el instanceof Element) {
+      if (el === this.hintContainer || this.hintContainer?.contains(el)) {
+        return false;
+      }
+    }
+
+    if (this.linkyAnimation?.play) {
+      return false;
+    }
+
+    this.showHint = false;
   }
 }
 
