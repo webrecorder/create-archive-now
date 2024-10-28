@@ -249,9 +249,13 @@ class ArchiveNow extends LitElement {
   render() {
     return html`
       <header class="[grid-area:header]">
-        <div class="text-sm leading-none text-stone-500">
-          Back to Webrecorder.net
-        </div>
+        <a
+          class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
+          href="https://webrecorder.net"
+        >
+          <sl-icon name="arrow-left" class="text-lg"></sl-icon>
+          <span class="text-sm">Back to Webrecorder.net</span>
+        </a>
       </header>
       <div
         class="${this.showHint
@@ -349,7 +353,7 @@ class ArchiveNow extends LitElement {
       <div
         class="${this.showHint
           ? "pointer-events-auto"
-          : "pointer-events-none"} fixed bottom-0 right-0 flex items-end p-4"
+          : "pointer-events-none"} fixed bottom-0 right-0 flex items-end"
       >
         <div>
           <sl-animation
@@ -371,20 +375,20 @@ class ArchiveNow extends LitElement {
               class="mb-16 max-w-sm translate-x-1 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all"
             >
               <div
-                class="flex items-center justify-between border-b border-cyan-300/50 p-4 leading-none"
+                class="flex items-center justify-between p-2 leading-none"
                 aria-live="polite"
               >
-                <p class="font-semibold">${title}</p>
-                <sl-icon name="gear"></sl-icon>
-                <button
+                <p class="p-2 font-semibold">${title}</p>
+                <sl-icon-button
+                  name="x-lg"
                   @click=${() => {
                     this.showHint = false;
                   }}
-                >
-                  X
-                </button>
+                ></sl-icon-button>
               </div>
-              <div class="text-pretty p-4 leading-relaxed">${message}</div>
+              <div class="text-pretty px-4 pb-4 pt-2 leading-relaxed">
+                ${message}
+              </div>
             </div>
           </sl-animation>
         </div>
@@ -397,13 +401,17 @@ class ArchiveNow extends LitElement {
           fill="backwards"
           play
         >
-          <button
-            class="pointer-events-auto origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
-            @click=${() => (this.showHint = !this.showHint)}
-            title="Toggle hint"
+          <div
+            class="p-3 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
           >
-            <img class="h-auto w-24" src=${linkySrc} />
-          </button>
+            <button
+              class="pointer-events-auto origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
+              @click=${() => (this.showHint = !this.showHint)}
+              title="Toggle Linky's hint"
+            >
+              <img class="h-auto w-24" src=${linkySrc} />
+            </button>
+          </div>
         </sl-animation>
       </div>
     `;
