@@ -15,15 +15,7 @@ import "./shoelace";
 
 const PAGE_COUNT_MIN = 10;
 
-type Hint = "first-load" | "download-archive" | "error" | "over-page-min";
-
-function heading(content: TemplateResult | string) {
-  return html`
-    <h2 class="my-4 font-display text-2xl font-semibold leading-none">
-      ${content}
-    </h2>
-  `;
-}
+type Hint = "first-load" | "page-load" | "error" | "over-page-min" | "finished";
 
 @customElement("archive-now")
 class ArchiveNow extends LitElement {
@@ -44,9 +36,6 @@ class ArchiveNow extends LitElement {
 
   @state()
   private hint: Hint = "first-load";
-
-  @state()
-  private backdropVisible = true;
 
   @state()
   private pageCount = 0;
@@ -78,7 +67,7 @@ class ArchiveNow extends LitElement {
         When you’re done, click the
         <strong class="text-brand-green">Finish</strong> button.
       </p>`,
-    "download-archive": html` <p class="mb-3">
+    "page-load": html` <p class="mb-3">
         All the pages listed will be included in your archive.
       </p>
       <p>
@@ -117,6 +106,21 @@ class ArchiveNow extends LitElement {
         about how automated crawling can supplement a manual archiving workflow.
       </div>
     `,
+    finished: html`
+      <p class="mb-3">
+        Everything you can see here is now being rendered from your web archive
+        without the involvement of the original server.
+      </p>
+      <p class="mb-3">
+        To share a link to this archive, import it to
+        <strong class="font-semibold">Browsertrix</strong> and add it to a
+        collection.
+      </p>
+      <p class="mb-3">
+        You can also download your archive and view it at any time with
+        <strong class="font-semibold">ReplayWeb.page</strong>.
+      </p>
+    `,
   };
 
   connectedCallback(): void {
@@ -152,9 +156,15 @@ class ArchiveNow extends LitElement {
     }
 
     if (_changedProperties.has("isFinished") && this.isFinished) {
-      console.log("finish?");
-      this.showHint = false;
-      this.removeLinky();
+      this.hint = "finished";
+
+      if (!this.showHint) {
+        this.shakeLinky();
+        this.showHint = true;
+      }
+
+      this.showBackdrop();
+      // this.removeLinky();
     }
 
     if (
@@ -282,31 +292,24 @@ class ArchiveNow extends LitElement {
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
       <div class="overflow-auto [grid-area:detail]">
+        <h2 class="my-4 font-display text-2xl font-semibold leading-none">
+          Your Web Archive
+        </h2>
         ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
       </div>
 
       ${this.renderBackdrop()}
+
+      <div
+        class="absolute bottom-0 right-0 size-24 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
+      ></div>
       ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
     `;
   }
 
   private renderFinished() {
     return html`
-      ${heading("Archive Created! 🎉")}
-      <div class="text-pretty leading-relaxed">
-        <p class="mb-4">
-          Everything you can see here is now being rendered from your web
-          archive without the involvement of the original server.
-        </p>
-        <p class="mb-4">
-          To share a link to this archive, import it to Browsertrix and add it
-          to a collection.
-        </p>
-        <p class="mb-4">
-          You can also download your archive and view it at any time with
-          ReplayWeb.page
-        </p>
-
+      <div>
         <sl-button
           href="${this.downloadUrl}"
           target="_blank"
@@ -320,10 +323,11 @@ class ArchiveNow extends LitElement {
 
   private renderPageUrls() {
     const pageCount = Math.max(1, this.pageUrls.length);
-    return html`${heading(html`
+    return html`
+      <h3 class="mb-3 font-medium">
         Archiving ${pageCount.toLocaleString()}
-        ${pageCount === 1 ? "Page" : "Pages"}
-      `)}
+        ${pageCount === 1 ? "page" : "pages"}
+      </h3>
       <ul class="divide-y font-monospace text-sm">
         ${Array.from(this.pageUrls.values()).map(
           (url) => html`
@@ -334,7 +338,8 @@ class ArchiveNow extends LitElement {
             </li>
           `,
         )}
-      </ul> `;
+      </ul>
+    `;
   }
 
   private renderHint() {
@@ -352,6 +357,10 @@ class ArchiveNow extends LitElement {
       }
       case "over-page-min": {
         title = "Archiving a lot of pages?";
+        break;
+      }
+      case "finished": {
+        title = "Archive created! 🎉";
         break;
       }
       default:
@@ -402,27 +411,25 @@ class ArchiveNow extends LitElement {
             </div>
           </sl-animation>
         </div>
-        <sl-animation
-          id="linkyAnimation"
-          name="lightSpeedInRight"
-          easing="ease-in-out"
-          duration="1000"
-          iterations="1"
-          fill="backwards"
-          play
-        >
-          <div
-            class="p-3 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
+        <div class="p-3">
+          <sl-animation
+            id="linkyAnimation"
+            name="lightSpeedInRight"
+            easing="ease-in-out"
+            duration="1000"
+            iterations="1"
+            fill="backwards"
+            play
           >
             <button
-              class="pointer-events-auto origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
+              class="pointer-events-auto relative z-10 origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
               <img class="h-auto w-24" src=${linkySrc} />
             </button>
-          </div>
-        </sl-animation>
+          </sl-animation>
+        </div>
       </div>
     `;
   }
@@ -430,9 +437,7 @@ class ArchiveNow extends LitElement {
   private renderBackdrop() {
     return html`<div
       id="hintBackdrop"
-      class="${this.backdropVisible
-        ? "opacity-1"
-        : "opacity-0"} fixed inset-0 bg-cyan-900/30 transition-opacity"
+      class="fixed inset-0 bg-cyan-900/30 transition-opacity"
     ></div>`;
   }
 
@@ -444,40 +449,6 @@ class ArchiveNow extends LitElement {
     this.hintAnimation.play = true;
   }
 
-  private showBackdrop() {
-    if (!this.hintBackdrop) return;
-
-    this.hintBackdrop.style.display = "block";
-    this.backdropVisible = true;
-  }
-
-  private hideBackdrop() {
-    const onTransitionEnd = (e: TransitionEvent) => {
-      if (e.propertyName === "opacity" && this.hintBackdrop) {
-        this.hintBackdrop.style.display = "none";
-        this.hintBackdrop.removeEventListener("transitionend", onTransitionEnd);
-      }
-    };
-    this.hintBackdrop?.addEventListener("transitionend", onTransitionEnd);
-    this.backdropVisible = false;
-  }
-
-  private onFinishFadeOut() {
-    switch (this.hint) {
-      case "error": {
-        this.errorMessage = "";
-        break;
-      }
-      case "over-page-min": {
-        this.pageCount = 0;
-        break;
-      }
-      default:
-        break;
-    }
-    this.hint = "download-archive";
-  }
-
   private fadeOutHint() {
     if (!this.hintAnimation || this.hintAnimation.play) return;
 
@@ -486,11 +457,54 @@ class ArchiveNow extends LitElement {
     this.hintAnimation.play = true;
   }
 
+  private onFinishFadeOut() {
+    switch (this.hint) {
+      case "first-load": {
+        this.hint = "page-load";
+        break;
+      }
+      case "error": {
+        this.errorMessage = "";
+        this.hint = "page-load";
+        break;
+      }
+      case "over-page-min": {
+        this.pageCount = 0;
+        this.hint = "page-load";
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  private showBackdrop() {
+    if (!this.hintBackdrop) return;
+
+    this.hintBackdrop.style.display = "block";
+
+    window.requestAnimationFrame(() => {
+      this.hintBackdrop!.style.opacity = "1";
+    });
+  }
+
+  private hideBackdrop() {
+    if (!this.hintBackdrop) return;
+
+    const onTransitionEnd = (e: TransitionEvent) => {
+      if (e.propertyName === "opacity" && this.hintBackdrop) {
+        this.hintBackdrop.style.display = "none";
+        this.hintBackdrop.removeEventListener("transitionend", onTransitionEnd);
+      }
+    };
+    this.hintBackdrop.addEventListener("transitionend", onTransitionEnd);
+    this.hintBackdrop.style.opacity = "0";
+  }
+
   private removeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
     this.linkyAnimation.duration = 300;
-    this.linkyAnimation.iterations = 1;
     this.linkyAnimation.name = "fadeOut";
     this.linkyAnimation.fill = "both";
     this.linkyAnimation.play = true;
@@ -499,8 +513,7 @@ class ArchiveNow extends LitElement {
   private shakeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
-    this.linkyAnimation.duration = 2000;
-    this.linkyAnimation.iterations = 2;
+    this.linkyAnimation.duration = 1800;
     this.linkyAnimation.name = "jello";
     this.linkyAnimation.play = true;
   }
@@ -514,7 +527,11 @@ class ArchiveNow extends LitElement {
       }
     }
 
-    if (this.linkyAnimation?.play) {
+    // Disable click outside on page load
+    if (
+      this.linkyAnimation?.name === "lightSpeedInRight" &&
+      this.linkyAnimation.play
+    ) {
       return false;
     }
 
