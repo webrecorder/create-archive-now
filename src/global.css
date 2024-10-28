@@ -8,18 +8,28 @@
   }
 
   body {
-    @apply w-full;
+    @apply w-full overflow-hidden bg-earth-50 p-3 text-stone-700;
   }
 }
 
 @layer components {
   archive-now {
-    @apply flex h-full flex-col;
+    @apply grid h-full gap-3;
+    grid-template-areas:
+      "archive"
+      "detail"
+      "footer";
+    grid-template-rows: 1fr theme(size.48) min-content;
+    grid-template-columns: 1fr;
   }
 
   @media screen(lg) {
     archive-now {
-      @apply flex-row;
+      grid-template-areas:
+        "archive detail"
+        "footer footer";
+      grid-template-rows: 1fr min-content;
+      grid-template-columns: 1fr theme(size.96);
     }
   }
 }

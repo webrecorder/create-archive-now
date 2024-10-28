@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  @media screen(lg) {
+    #archive-now-details {
+      @apply max-w-sm;
+    }
+  }
+}

@@ -32,10 +32,16 @@ class ArchiveNow extends LitElement {
   private showHint = true;
 
   @state()
+  private backdropVisible = true;
+
+  @state()
   private pageCount = 0;
 
   @state()
   private pageUrls: string[] = [];
+
+  @query("#hintBackdrop")
+  private hintBackdrop?: HTMLDivElement;
 
   @query("#linkyAnimation")
   private linkyAnimation?: SlAnimation;
@@ -74,6 +80,7 @@ class ArchiveNow extends LitElement {
         this.fadeInHint();
       } else {
         this.fadeOutHint();
+        this.hideBackdrop();
       }
     }
   }
@@ -165,21 +172,29 @@ class ArchiveNow extends LitElement {
 
   render() {
     return html`
-      ${!this.isFinished
-        ? html` <archive-web-page
-            proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
-            sandbox="true"
-            coll=${this.collId}
-            deepLink="true"
-            url="https://example.com/"
-          ></archive-web-page>`
-        : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       <div
-        class="w-full max-w-sm overflow-auto border-l-2 border-cyan-100/80 p-4"
+        class="${this.showHint
+          ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
+          : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
+        ${!this.isFinished
+          ? html` <archive-web-page
+              proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
+              sandbox="true"
+              coll=${this.collId}
+              deepLink="true"
+              url="https://example.com/"
+            ></archive-web-page>`
+          : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
+      </div>
+      <div class="overflow-auto py-3 [grid-area:detail] lg:px-3">
         ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
       </div>
-      ${this.pageUrls.length > 0 ? this.renderHint() : ""}
+      <footer class="[grid-area:footer]">
+        <p class="text-sm text-stone-500">archive-now is a Webrecorder demo</p>
+        ${this.renderBackdrop()}
+        ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
+      </footer>
     `;
   }
 
@@ -201,15 +216,16 @@ class ArchiveNow extends LitElement {
   }
 
   private renderPageUrls() {
-    return html`<h2 class="mb-3 font-semibold text-stone-700">
-        Archived ${this.pageUrls.length.toLocaleString()}
-        ${this.pageUrls.length === 1 ? "page" : "pages"}
+    const pageCount = Math.max(1, this.pageUrls.length);
+    return html`<h2 class="mb-3 font-display text-xl font-semibold">
+        Archiving ${pageCount.toLocaleString()}
+        ${pageCount === 1 ? "page" : "pages"}
       </h2>
-      <ul class="divide-y font-monospace text-sm text-stone-600">
+      <ul class="divide-y font-monospace text-sm">
         ${Array.from(this.pageUrls.values()).map(
           (url) => html`
             <li
-              class="cursor-pointer truncate py-1 hover:overflow-visible hover:whitespace-normal hover:break-all"
+              class="cursor-default truncate py-1 hover:overflow-visible hover:whitespace-normal hover:break-all"
             >
               ${url}
             </li>
@@ -282,10 +298,10 @@ class ArchiveNow extends LitElement {
             play
           >
             <div
-              class="mb-16 max-w-sm translate-x-1 rounded-lg border border-cyan-100/80 bg-white/80 shadow-lg backdrop-blur-md transition-all"
+              class="mb-16 max-w-sm translate-x-1 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all"
             >
               <div
-                class="flex items-center justify-between border-b border-cyan-100/80 p-4 px-4 leading-none"
+                class="flex items-center justify-between border-b border-cyan-300/50 p-4 leading-none"
                 aria-live="polite"
               >
                 <p class="font-semibold">${title}</p>
@@ -333,12 +349,39 @@ class ArchiveNow extends LitElement {
     `;
   }
 
+  private renderBackdrop() {
+    return html`<div
+      id="hintBackdrop"
+      class="${this.backdropVisible
+        ? "opacity-1"
+        : "opacity-0"} fixed inset-0 bg-cyan-900/20 transition-opacity"
+    ></div>`;
+  }
+
   private fadeInHint() {
     if (!this.hintAnimation || this.hintAnimation.play) return;
 
     this.hintAnimation.delay = 0;
     this.hintAnimation.name = "fadeIn";
     this.hintAnimation.play = true;
+  }
+
+  private showBackdrop() {
+    if (!this.hintBackdrop) return;
+
+    this.hintBackdrop.style.display = "block";
+    this.backdropVisible = true;
+  }
+
+  private hideBackdrop() {
+    const onTransitionEnd = (e: TransitionEvent) => {
+      if (e.propertyName === "opacity" && this.hintBackdrop) {
+        this.hintBackdrop.style.display = "none";
+        this.hintBackdrop.removeEventListener("transitionend", onTransitionEnd);
+      }
+    };
+    this.hintBackdrop?.addEventListener("transitionend", onTransitionEnd);
+    this.backdropVisible = false;
   }
 
   private fadeOutHint() {
