@@ -8,27 +8,34 @@
   }
 
   body {
-    @apply w-full overflow-hidden bg-earth-50 p-3 text-stone-700;
+    @apply w-full overflow-hidden bg-earth-50 p-4 text-stone-700;
   }
 }
 
 @layer components {
   archive-now {
-    @apply grid h-full gap-3;
+    @apply grid h-full gap-4;
     grid-template-areas:
+      "header"
       "archive"
-      "detail"
-      "footer";
-    grid-template-rows: 1fr theme(size.48) min-content;
+      "detail";
+    grid-template-rows: min-content 1fr theme(size.48);
     grid-template-columns: 1fr;
   }
 
   @media screen(lg) {
     archive-now {
       grid-template-areas:
-        "archive detail"
-        "footer footer";
-      grid-template-rows: 1fr min-content;
+        "header header"
+        "archive detail";
+      grid-template-rows: min-content 1fr;
+      grid-template-columns: 1fr theme(size.80);
+    }
+  }
+
+  @media screen(xl) {
+    archive-now {
+      @apply gap-x-8;
       grid-template-columns: 1fr theme(size.96);
     }
   }

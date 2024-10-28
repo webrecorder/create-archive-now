@@ -1,4 +1,10 @@
-import { html, LitElement, nothing, PropertyValues } from "lit";
+import {
+  html,
+  LitElement,
+  nothing,
+  type PropertyValues,
+  type TemplateResult,
+} from "lit";
 import { customElement, query, state } from "lit/decorators.js";
 import type { SlAnimation } from "@shoelace-style/shoelace";
 
@@ -9,10 +15,15 @@ import "./shoelace";
 
 const PAGE_COUNT_MIN = 10;
 
-type PageUrl = {
-  url: string;
-  ts: number;
-};
+type Hint = "first-load" | "download-archive" | "error" | "over-page-min";
+
+function heading(content: TemplateResult | string) {
+  return html`
+    <h2 class="my-4 font-display text-2xl font-semibold leading-none">
+      ${content}
+    </h2>
+  `;
+}
 
 @customElement("archive-now")
 class ArchiveNow extends LitElement {
@@ -26,10 +37,13 @@ class ArchiveNow extends LitElement {
   private downloadUrl = "";
 
   @state()
-  private hintMessage = "";
+  private errorMessage = "";
 
   @state()
   private showHint = true;
+
+  @state()
+  private hint: Hint = "first-load";
 
   @state()
   private backdropVisible = true;
@@ -52,6 +66,56 @@ class ArchiveNow extends LitElement {
   private currUrl = "";
   private shownForUrl = false;
 
+  private hintMessages: Record<Hint, TemplateResult> = {
+    "first-load": html`<p class="mb-3">
+        Browse and interact with the website like you would normally. Every new
+        page that you visit will be archived.
+      </p>
+      <p>
+        When you’re done, click the
+        <strong class="text-brand-green">Finish</strong> button.
+      </p>`,
+    "download-archive": html` <p class="mb-3">
+        All the pages listed will be included in your archive.
+      </p>
+      <p>
+        Click
+        <strong class="text-brand-green">Finish</strong> to finalize your
+        archive.
+      </p>`,
+    error: html`
+      <p class="mb-3">
+        This page may not work as expected in this limited demo.
+      </p>
+      <p>
+        For more comprehensive archiving, try using our
+        <a
+          class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+          href="http://webrecorder.net/archivewebpage"
+          target="_blank"
+          >ArchiveWeb.page</a
+        >
+        browser extension instead (it's free too!)
+      </p>
+    `,
+    "over-page-min": html`
+      <p class="mb-3">
+        You can automatically archive multiple pages and entire websites with
+        <strong class="font-semibold">Browsertrix</strong>, our browser-based
+        crawling service.
+      </p>
+      <div>
+        <a
+          class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+          href="http://webrecorder.net/browsertrix"
+          target="_blank"
+          >Learn more</a
+        >
+        about how automated crawling can supplement a manual archiving workflow.
+      </div>
+    `,
+  };
+
   connectedCallback(): void {
     super.connectedCallback();
 
@@ -62,14 +126,26 @@ class ArchiveNow extends LitElement {
 
   protected willUpdate(_changedProperties: PropertyValues): void {
     if (
-      (_changedProperties.has("hintMessage") && this.hintMessage) ||
+      (_changedProperties.has("errorMessage") && this.errorMessage) ||
       (_changedProperties.has("pageCount") && this.pageCount > PAGE_COUNT_MIN)
     ) {
+      if (this.errorMessage) {
+        this.hint = "error";
+      } else if (this.pageCount > PAGE_COUNT_MIN) {
+        this.hint = "over-page-min";
+      }
+
       if (!this.showHint) {
         this.showHint = true;
       }
 
       this.shakeLinky();
+    }
+
+    if (_changedProperties.has("isFinished") && this.isFinished) {
+      console.log("finish?");
+      this.showHint = false;
+      this.removeLinky();
     }
 
     if (
@@ -96,16 +172,16 @@ class ArchiveNow extends LitElement {
 
         case "live-proxy-url-error":
           if (event.data.status === 403) {
-            this.hintMessage =
+            this.errorMessage =
               "It looks like this site is blocking us from loading it.";
           } else if (event.data.status > 500) {
-            this.hintMessage =
+            this.errorMessage =
               "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
-            this.hintMessage =
+            this.errorMessage =
               "It looks like you're been rate limited (by this site, not by us!)";
           } else {
-            this.hintMessage = "It looks like this page could not be loaded.";
+            this.errorMessage = "It looks like this page could not be loaded.";
           }
           this.pageCount--;
           // const inx = this.pageUrls.indexOf(this.currUrl);
@@ -116,12 +192,12 @@ class ArchiveNow extends LitElement {
           break;
 
         case "rate-limited":
-          this.hintMessage =
+          this.errorMessage =
             "It looks like you're been rate limited (by this site, not by us!)";
           break;
 
         case "post-request-failed":
-          this.hintMessage =
+          this.errorMessage =
             "It looks like you're trying to log in to a site or access social media.";
           break;
 
@@ -136,7 +212,7 @@ class ArchiveNow extends LitElement {
           // if (this.currUrl) {
           //   this.pageUrls = [this.currUrl, ...this.pageUrls];
           // }
-          this.hintMessage = "";
+          this.errorMessage = "";
           if (this.currUrl !== event.data.url) {
             this.shownForUrl = false;
             this.currUrl = event.data.url;
@@ -145,7 +221,7 @@ class ArchiveNow extends LitElement {
       }
 
       if (
-        (this.hintMessage || this.pageCount > PAGE_COUNT_MIN) &&
+        (this.errorMessage || this.pageCount > PAGE_COUNT_MIN) &&
         !this.shownForUrl
       ) {
         this.shownForUrl = true;
@@ -172,6 +248,11 @@ class ArchiveNow extends LitElement {
 
   render() {
     return html`
+      <header class="[grid-area:header]">
+        <div class="text-sm leading-none text-stone-500">
+          Back to Webrecorder.net
+        </div>
+      </header>
       <div
         class="${this.showHint
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
@@ -187,40 +268,49 @@ class ArchiveNow extends LitElement {
             ></archive-web-page>`
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
-      <div class="overflow-auto py-3 [grid-area:detail] lg:px-3">
+      <div class="overflow-auto [grid-area:detail]">
         ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
       </div>
-      <footer class="[grid-area:footer]">
-        <p class="text-sm text-stone-500">archive-now is a Webrecorder demo</p>
-        ${this.renderBackdrop()}
-        ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
-      </footer>
+
+      ${this.renderBackdrop()}
+      ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
     `;
   }
 
   private renderFinished() {
     return html`
-      <h2>Replaying Archives</h2>
+      ${heading("Archive Created! 🎉")}
+      <div class="text-pretty leading-relaxed">
+        <p class="mb-4">
+          Everything you can see here is now being rendered from your web
+          archive without the involvement of the original server.
+        </p>
+        <p class="mb-4">
+          To share a link to this archive, import it to Browsertrix and add it
+          to a collection.
+        </p>
+        <p class="mb-4">
+          You can also download your archive and view it at any time with
+          ReplayWeb.page
+        </p>
 
-      <p>
-        Now, everything you see on the left is being loaded from the archive you
-        just created.
-      </p>
-
-      <p>
-        <sl-button href="${this.downloadUrl}" target="_blank"
-          >Download your archive</sl-button
+        <sl-button
+          href="${this.downloadUrl}"
+          target="_blank"
+          variant="primary"
+          size="large"
+          >Download Archive</sl-button
         >
-      </p>
+      </div>
     `;
   }
 
   private renderPageUrls() {
     const pageCount = Math.max(1, this.pageUrls.length);
-    return html`<h2 class="mb-3 font-display text-xl font-semibold">
+    return html`${heading(html`
         Archiving ${pageCount.toLocaleString()}
-        ${pageCount === 1 ? "page" : "pages"}
-      </h2>
+        ${pageCount === 1 ? "Page" : "Pages"}
+      `)}
       <ul class="divide-y font-monospace text-sm">
         ${Array.from(this.pageUrls.values()).map(
           (url) => html`
@@ -235,56 +325,31 @@ class ArchiveNow extends LitElement {
   }
 
   private renderHint() {
-    const overPageMin = this.pageCount > PAGE_COUNT_MIN;
     let title = "Let’s archive this website!";
-    let message = html`<p class="mb-3">
-        Browse with the website like you would normally. Everything you see
-        loaded is being archived.
-      </p>
-      <p>When you're done, click <strong>Finish</strong>.</p> `;
+    let message = this.hintMessages[this.hint];
 
-    if (this.hintMessage) {
-      title = "Issues archiving this page?";
-      message = html`
-        <p class="mb-3">${this.hintMessage}</p>
-        <p class="mb-3">
-          This page may not work as expected in this limited demo.
-        </p>
-        <p>
-          For more comprehensive archiving, try using our
-          <a
-            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-            href="http://webrecorder.net/archivewebpage"
-            target="_blank"
-            >ArchiveWeb.page</a
-          >
-          browser extension instead (it's free too!)
-        </p>
-      `;
-    } else if (overPageMin) {
-      title = "Archiving a lot of pages?";
-      message = html`
-        <p class="mb-3">
-          You can automatically archive multiple pages and entire websites with
-          <strong class="font-semibold">Browsertrix</strong>, our browser-based
-          crawling service.
-        </p>
-        <div>
-          <a
-            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-            href="http://webrecorder.net/browsertrix"
-            target="_blank"
-            >Learn more</a
-          >
-          about how automated crawling can supplement a manual archiving
-          workflow.
-        </div>
-      `;
+    switch (this.hint) {
+      case "error": {
+        title = "Issues archiving this page?";
+        message = html`
+          <p class="mb-3">${this.errorMessage}</p>
+          ${message}
+        `;
+        break;
+      }
+      case "over-page-min": {
+        title = "Archiving a lot of pages?";
+        break;
+      }
+      default:
+        break;
     }
 
     return html`
       <div
-        class="pointer-events-none fixed bottom-0 right-0 flex items-end p-3"
+        class="${this.showHint
+          ? "pointer-events-auto"
+          : "pointer-events-none"} fixed bottom-0 right-0 flex items-end p-4"
       >
         <div>
           <sl-animation
@@ -292,13 +357,18 @@ class ArchiveNow extends LitElement {
             name="fadeIn"
             easing="ease-in-out"
             duration="200"
-            delay="1200"
+            delay="800"
             iterations="1"
             fill="both"
             play
+            @sl-finish=${() => {
+              if (this.showHint === false) {
+                this.onFinishFadeOut();
+              }
+            }}
           >
             <div
-              class="mb-16 max-w-sm translate-x-1 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all"
+              class="mb-16 max-w-sm translate-x-1 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all"
             >
               <div
                 class="flex items-center justify-between border-b border-cyan-300/50 p-4 leading-none"
@@ -307,23 +377,14 @@ class ArchiveNow extends LitElement {
                 <p class="font-semibold">${title}</p>
                 <sl-icon name="gear"></sl-icon>
                 <button
-                  class=${this.showHint
-                    ? "pointer-events-auto"
-                    : "pointer-events-none"}
                   @click=${() => {
                     this.showHint = false;
-
-                    if (this.hintMessage) {
-                      this.hintMessage = "";
-                    } else if (overPageMin) {
-                      this.pageCount = 0;
-                    }
                   }}
                 >
                   X
                 </button>
               </div>
-              <div class="text-pretty p-4">${message}</div>
+              <div class="text-pretty p-4 leading-relaxed">${message}</div>
             </div>
           </sl-animation>
         </div>
@@ -331,8 +392,7 @@ class ArchiveNow extends LitElement {
           id="linkyAnimation"
           name="lightSpeedInRight"
           easing="ease-in-out"
-          duration="1200"
-          delay="200"
+          duration="1000"
           iterations="1"
           fill="backwards"
           play
@@ -355,6 +415,9 @@ class ArchiveNow extends LitElement {
       class="${this.backdropVisible
         ? "opacity-1"
         : "opacity-0"} fixed inset-0 bg-cyan-900/20 transition-opacity"
+      @click=${() => {
+        this.showHint = false;
+      }}
     ></div>`;
   }
 
@@ -384,6 +447,22 @@ class ArchiveNow extends LitElement {
     this.backdropVisible = false;
   }
 
+  private onFinishFadeOut() {
+    switch (this.hint) {
+      case "error": {
+        this.errorMessage = "";
+        break;
+      }
+      case "over-page-min": {
+        this.pageCount = 0;
+        break;
+      }
+      default:
+        break;
+    }
+    this.hint = "download-archive";
+  }
+
   private fadeOutHint() {
     if (!this.hintAnimation || this.hintAnimation.play) return;
 
@@ -392,10 +471,19 @@ class ArchiveNow extends LitElement {
     this.hintAnimation.play = true;
   }
 
+  private removeLinky() {
+    if (!this.linkyAnimation || this.linkyAnimation.play) return;
+
+    this.linkyAnimation.duration = 300;
+    this.linkyAnimation.iterations = 1;
+    this.linkyAnimation.name = "fadeOut";
+    this.linkyAnimation.fill = "both";
+    this.linkyAnimation.play = true;
+  }
+
   private shakeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
-    this.linkyAnimation.delay = 0;
     this.linkyAnimation.duration = 2000;
     this.linkyAnimation.iterations = 2;
     this.linkyAnimation.name = "jello";
