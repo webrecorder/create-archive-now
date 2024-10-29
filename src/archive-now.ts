@@ -115,10 +115,10 @@ class ArchiveNow extends LitElement {
     finished: html`
       <p class="mb-3">
         All the pages you see now are loaded directly from your web archive,
-        bypassing the Internet.
+        bypassing the Internet!
       </p>
       <p>
-        Browse your archive to see what's included! Click on the
+        Browse your archive to see what’s included. Click on the
         <img
           class="inline-block size-5 align-[-0.3rem] opacity-70"
           src=${faListIconSrc}
@@ -319,8 +319,8 @@ class ArchiveNow extends LitElement {
 
   private renderFinished() {
     return html`
-      <div class="mb-4 text-pretty leading-relaxed">
-        <p class="mb-3">
+      <div class="text-pretty leading-relaxed">
+        <p class="mb-4">
           Download your archive and view it at any time with
           <a
             class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
@@ -329,37 +329,53 @@ class ArchiveNow extends LitElement {
             >ReplayWeb.page</a
           >.
         </p>
-        <p>
-          To share your archive, you can create a public web archive collection
-          with
-          <a
-            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-            href="http://webrecorder.net/browsertrix"
-            target="_blank"
-            >Browsertrix</a
-          >.
-        </p>
-      </div>
-      <div class="flex flex-col gap-3">
         <sl-button
-          class="w-full"
+          class="block w-full"
           href="${this.downloadUrl}"
           target="_blank"
           size="large"
         >
           <sl-icon slot="prefix" name="download"></sl-icon>
-          Download Archive
+          Download Archive (.wacz)
         </sl-button>
-        <sl-button
-          class="w-full"
-          href="https://webrecorder.net/browsertrix#get-started"
-          target="_blank"
-          variant="primary"
-          size="large"
-        >
-          <sl-icon slot="prefix" name="share"></sl-icon>
-          Sign up for Browsertrix
-        </sl-button>
+
+        <hr class="my-6 border-brand-green/20" />
+
+        <h3 class="mb-3 text-lg font-semibold leading-none">
+          Share your archive
+        </h3>
+        <p class="mb-3">
+          To share your archive, create a public web archive collection with
+          <strong class="font-semibold">Browsertrix</strong>, our complete
+          archiving platform.
+        </p>
+        <ol class="list-inside list-decimal">
+          <li>
+            Log in or
+            <a
+              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+              href="http://webrecorder.net/browsertrix#getting-started"
+              target="_blank"
+              >sign up for Browsertrix</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+              href="https://docs.browsertrix.com/user-guide/archived-items/#uploading-web-archives"
+              target="_blank"
+              >Import your archive</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+              href="https://docs.browsertrix.com/user-guide/collection/"
+              target="_blank"
+              >Create a public collection</a
+            >
+          </li>
+        </ol>
       </div>
     `;
   }
