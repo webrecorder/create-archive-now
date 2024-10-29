@@ -311,7 +311,7 @@ class ArchiveNow extends LitElement {
       <div
         class="pointer-events-none absolute bottom-0 right-0 size-24 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
-      ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
+      ${this.renderLinky()}
     `;
   }
 
@@ -330,7 +330,10 @@ class ArchiveNow extends LitElement {
   }
 
   private renderPageUrls() {
-    const pageCount = Math.max(1, this.pageUrls.length);
+    const pageCount = this.pageUrls.length;
+
+    if (pageCount < 1) return;
+
     return html`
       <h3 class="mb-3 font-medium">
         Archiving ${pageCount.toLocaleString()}
@@ -350,7 +353,7 @@ class ArchiveNow extends LitElement {
     `;
   }
 
-  private renderHint() {
+  private renderLinky() {
     let title = "Let’s archive this website!";
     let message = this.hintMessages[this.hint];
 
@@ -392,7 +395,7 @@ class ArchiveNow extends LitElement {
             name="fadeIn"
             easing="ease-in-out"
             duration="200"
-            delay="800"
+            delay="900"
             iterations="1"
             fill="both"
             play
@@ -430,6 +433,7 @@ class ArchiveNow extends LitElement {
             id="linkyAnimation"
             name="lightSpeedInRight"
             easing="ease-in-out"
+            delay="100"
             duration="1000"
             iterations="1"
             fill="backwards"
@@ -520,6 +524,7 @@ class ArchiveNow extends LitElement {
   private removeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
+    this.linkyAnimation.delay = 0;
     this.linkyAnimation.duration = 300;
     this.linkyAnimation.name = "fadeOut";
     this.linkyAnimation.fill = "both";
@@ -529,6 +534,7 @@ class ArchiveNow extends LitElement {
   private shakeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
+    this.linkyAnimation.delay = 0;
     this.linkyAnimation.duration = 1800;
     this.linkyAnimation.name = "jello";
     this.linkyAnimation.play = true;
