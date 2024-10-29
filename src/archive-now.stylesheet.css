@@ -10,7 +10,7 @@
   --sl-color-primary-400: theme(colors.cyan.400);
   --sl-color-primary-500: theme(colors.cyan.500);
   --sl-color-primary-600: theme(colors.cyan.600);
-  --sl-color-primary-700: theme(colors.cyan.700.DEFAULT);
+  --sl-color-primary-700: theme(colors.cyan.700);
   --sl-color-primary-800: theme(colors.cyan.800);
   --sl-color-primary-900: theme(colors.cyan.900);
 }
