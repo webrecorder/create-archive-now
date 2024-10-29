@@ -204,8 +204,14 @@ class ArchiveNow extends LitElement {
 
         case "live-proxy-url-error":
           if (event.data.status === 403) {
-            this.errorMessage =
-              "It looks like this site is blocking us from loading it.";
+            // Since https://example is a valid URL, manually check for basic domain syntax
+            if (event.data.url.indexOf(".") > 0) {
+              this.errorMessage =
+                "It looks like this site is blocking us from loading it.";
+            } else {
+              this.errorMessage =
+                "It looks like this might not be a valid URL, or the site is blocking us from loading it.";
+            }
           } else if (event.data.status > 500) {
             this.errorMessage =
               "It looks like this might not be a valid URL, or the site is down.";
