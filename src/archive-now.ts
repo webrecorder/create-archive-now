@@ -69,18 +69,18 @@ class ArchiveNow extends LitElement {
   private hintMessages: Record<Hint, TemplateResult> = {
     "first-load": html`<p class="mb-3">
         Browse and interact with the website like you would normally. Every link
-        that you follow will be archived.
+        you follow will be archived.
       </p>
       <p>
         When you’re done, click the
         <strong class="font-semibold text-brand-green">Finish</strong> button.
       </p>`,
     "page-load": html`<p class="mb-3">
-        All the pages visited so far will be included in your archive.
+        All pages visited so far will be included in your archive.
       </p>
       <p class="mb-3">
-        You can also enter in a new URL to load any page that’s not linked from
-        the page you’re currently viewing.
+        You can also enter a new URL to load any page that’s not linked from the
+        page you’re currently viewing.
       </p>
       <p>
         Click
@@ -89,8 +89,8 @@ class ArchiveNow extends LitElement {
       </p>`,
     error: html`
       <p class="mb-3">
-        Some pages may not work as expected in this limited demo. For more
-        comprehensive archiving, try our
+        This is a limited demo, and some pages may not work as expected. For
+        more comprehensive archiving, try our
         <a
           class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
           href="http://webrecorder.net/archivewebpage"
@@ -99,7 +99,7 @@ class ArchiveNow extends LitElement {
         >
         browser extension (it’s free, too!)
       </p>
-      <p>Or, try another page by entering a different URL.</p>
+      <p>Or try another page by entering a different URL.</p>
     `,
     "over-page-min": html`
       <p class="mb-3">
@@ -208,10 +208,10 @@ class ArchiveNow extends LitElement {
               "It looks like this site is blocking us from loading it.";
           } else if (event.data.status > 500) {
             this.errorMessage =
-              "It looks like this might not be a valid URL or the site is down.";
+              "It looks like this might not be a valid URL, or the site is down.";
           } else if (event.data.status === 429) {
             this.errorMessage =
-              "It looks like you’ve been rate limited (by the site, not by us.)";
+              "It looks like this site is rate limiting or blocking you.";
           } else {
             this.errorMessage = "It looks like this page could not be loaded.";
           }
@@ -225,7 +225,7 @@ class ArchiveNow extends LitElement {
 
         case "rate-limited":
           this.errorMessage =
-            "It looks like you’ve been rate limited (by this site, not by us.)";
+            "It looks like this site is rate limiting or blocking you.";
           break;
 
         case "post-request-failed":
