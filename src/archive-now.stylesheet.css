@@ -17,14 +17,23 @@
 
 @layer components {
   sl-button::part(base) {
-    @apply rounded-md shadow;
+    @apply rounded-md shadow-md;
   }
 
   sl-button[variant="primary"]::part(base) {
     background-color: theme(colors.cyan.400);
+    border-color: theme(colors.cyan.400);
   }
 
   sl-button[variant="primary"]::part(base):hover {
     background-color: theme(colors.cyan.500);
+  }
+
+  sl-dialog::part(panel) {
+    @apply rounded-lg shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50;
+  }
+
+  sl-dialog::part(header) {
+    @apply text-xl font-semibold;
   }
 }

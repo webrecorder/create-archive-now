@@ -6,7 +6,8 @@ import {
   type TemplateResult,
 } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
-import type { SlAnimation } from "@shoelace-style/shoelace";
+import type { SlAnimation, SlDialog, SlInput } from "@shoelace-style/shoelace";
+import { getFormControls } from "@shoelace-style/shoelace/dist/utilities/form.js";
 
 import themeCSS from "./archive-now.stylesheet.css";
 import linkyHelloSrc from "./assets/Linky-Hello.avif";
@@ -17,6 +18,7 @@ import faListIconSrc from "./assets/fa-list-icon.svg";
 import "./shoelace";
 
 const PAGE_COUNT_MIN = 10;
+const DEFAULT_URL = "https://example.com/";
 
 type Hint = "first-load" | "page-load" | "error" | "over-page-min" | "finished";
 
@@ -33,6 +35,9 @@ class ArchiveNow extends LitElement {
 
   @state()
   private errorMessage = "";
+
+  @state()
+  private showCreateDialog = false;
 
   @state()
   private showHint = true;
@@ -114,17 +119,17 @@ class ArchiveNow extends LitElement {
     `,
     finished: html`
       <p class="mb-3">
-        All the pages you see now are loaded directly from your web archive,
-        bypassing the Internet!
+        Click a page under <strong class="font-medium">Page Title</strong> to
+        load it directly from your web archive!
       </p>
-      <p>
-        Browse your archive to see what’s included. Click on the
+      <p class="mb-3">
+        Once a page is loaded, you can click the
         <img
           class="inline-block size-5 align-[-0.3rem] opacity-70"
           src=${faListIconSrc}
           alt="Browse Contents"
         />
-        icon to view a list of archived pages.
+        icon to view a list of all archived pages.
       </p>
     `,
   };
@@ -285,7 +290,7 @@ class ArchiveNow extends LitElement {
         </a>
       </header>
       <div
-        class="${this.showHint
+        class="${this.showHint || this.showCreateDialog
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
           : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
@@ -295,11 +300,13 @@ class ArchiveNow extends LitElement {
               sandbox="true"
               coll=${this.collId}
               deepLink="true"
-              url="https://example.com/"
+              url=${DEFAULT_URL}
             ></archive-web-page>`
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
-      <div class="mr-16 overflow-auto [grid-area:detail] lg:mr-0">
+      <div
+        class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
+      >
         <h2
           class="my-4 font-display text-xl font-semibold leading-none lg:text-2xl"
         >
@@ -313,7 +320,7 @@ class ArchiveNow extends LitElement {
       <div
         class="pointer-events-none absolute bottom-0 right-0 size-32 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
-      ${this.renderLinky()}
+      ${this.renderLinky()} ${this.renderUrlDialog()}
     `;
   }
 
@@ -377,6 +384,18 @@ class ArchiveNow extends LitElement {
             >
           </li>
         </ol>
+
+        <hr class="my-6 border-brand-green/20" />
+
+        <div>
+          <button
+            class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
+            @click=${() => (this.showCreateDialog = true)}
+          >
+            <sl-icon name="arrow-clockwise" class="text-lg"></sl-icon>
+            <span class="text-sm">Create another archive</span>
+          </button>
+        </div>
       </div>
     `;
   }
@@ -506,10 +525,54 @@ class ArchiveNow extends LitElement {
     `;
   }
 
+  private renderUrlDialog() {
+    return html`
+      <sl-dialog
+        label="Create New Archive"
+        class="[--header-spacing:theme(spacing.3)] [--width:70ch]"
+        ?open=${this.showCreateDialog}
+        @sl-hide=${() => (this.showCreateDialog = false)}
+      >
+        <form
+          @submit=${async (e: SubmitEvent) => {
+            e.preventDefault();
+
+            const form = e.currentTarget as HTMLFormElement;
+            const input = getFormControls(form)[0] as SlInput;
+
+            if ("invalid" in input.dataset) {
+              return;
+            }
+
+            await this.startNewArchive(input.value);
+
+            input.value = "";
+            this.showCreateDialog = false;
+          }}
+        >
+          <div class="flex items-end gap-3 px-3 pb-3">
+            <sl-input
+              name="url"
+              class="flex-1"
+              label="Enter a URL"
+              placeholder=${DEFAULT_URL.replace(/\/$/, "")}
+              type="url"
+              autocomplete="off"
+              required
+            ></sl-input>
+            <sl-button type="submit" variant="primary"
+              >Start Archiving</sl-button
+            >
+          </div>
+        </form>
+      </sl-dialog>
+    `;
+  }
+
   private renderBackdrop() {
     return html`<div
       id="hintBackdrop"
-      class="fixed inset-0 bg-cyan-900/30 transition-opacity"
+      class="fixed inset-0 bg-[var(--sl-overlay-background-color)] transition-opacity"
     ></div>`;
   }
 
@@ -612,6 +675,19 @@ class ArchiveNow extends LitElement {
     }
 
     this.showHint = false;
+  }
+
+  private async startNewArchive(archiveUrl: string) {
+    this.hint = "first-load";
+    this.isFinished = false;
+    this.downloadUrl = "";
+    this.collId = randomId();
+    this.pageCount = 0;
+    this.pageUrls = [];
+
+    await this.updateComplete;
+
+    window.location.hash = `url=${window.encodeURIComponent(archiveUrl)}`;
   }
 }
 
