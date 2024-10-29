@@ -9,7 +9,8 @@ import { customElement, query, state } from "lit/decorators.js";
 import type { SlAnimation } from "@shoelace-style/shoelace";
 
 import themeCSS from "./archive-now.stylesheet.css";
-import linkySrc from "./assets/linky-2.avif";
+import linkyHelloSrc from "./assets/Linky-Hello.avif";
+import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
 
 import "./shoelace";
 
@@ -81,18 +82,17 @@ class ArchiveNow extends LitElement {
       </p>`,
     error: html`
       <p class="mb-3">
-        This page may not work as expected in this limited demo.
-      </p>
-      <p>
-        For more comprehensive archiving, try using our
+        Some pages may not work as expected in this limited demo. For more
+        comprehensive archiving, try our
         <a
           class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
           href="http://webrecorder.net/archivewebpage"
           target="_blank"
           >ArchiveWeb.page</a
         >
-        browser extension instead (it’s free, too!)
+        browser extension (it’s free, too!)
       </p>
+      <p>Or, try another page by entering a different URL.</p>
     `,
     "over-page-min": html`
       <p class="mb-3">
@@ -204,7 +204,7 @@ class ArchiveNow extends LitElement {
               "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
             this.errorMessage =
-              "It looks like you’ve been rate limited (by this site, not by us.)";
+              "It looks like you’ve been rate limited (by the site, not by us.)";
           } else {
             this.errorMessage = "It looks like this page could not be loaded.";
           }
@@ -309,9 +309,9 @@ class ArchiveNow extends LitElement {
       ${this.renderBackdrop()}
 
       <div
-        class="pointer-events-none absolute bottom-0 right-0 size-24 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
+        class="pointer-events-none absolute bottom-0 right-0 size-32 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
-      ${this.pageUrls.length > 0 ? this.renderHint() : nothing}
+      ${this.renderLinky()}
     `;
   }
 
@@ -330,7 +330,10 @@ class ArchiveNow extends LitElement {
   }
 
   private renderPageUrls() {
-    const pageCount = Math.max(1, this.pageUrls.length);
+    const pageCount = this.pageUrls.length;
+
+    if (pageCount < 1) return;
+
     return html`
       <h3 class="mb-3 font-medium">
         Archiving ${pageCount.toLocaleString()}
@@ -350,9 +353,10 @@ class ArchiveNow extends LitElement {
     `;
   }
 
-  private renderHint() {
+  private renderLinky() {
     let title = "Let’s archive this website!";
     let message = this.hintMessages[this.hint];
+    let linkySrc = linkyHelloSrc;
 
     switch (this.hint) {
       case "error": {
@@ -363,6 +367,7 @@ class ArchiveNow extends LitElement {
             : nothing}
           ${message}
         `;
+        linkySrc = linkyConcernedSrc;
         break;
       }
       case "page-load": {
@@ -392,7 +397,7 @@ class ArchiveNow extends LitElement {
             name="fadeIn"
             easing="ease-in-out"
             duration="200"
-            delay="800"
+            delay="900"
             iterations="1"
             fill="both"
             play
@@ -425,11 +430,12 @@ class ArchiveNow extends LitElement {
             </div>
           </sl-animation>
         </div>
-        <div class="p-3">
+        <div>
           <sl-animation
             id="linkyAnimation"
             name="lightSpeedInRight"
             easing="ease-in-out"
+            delay="100"
             duration="1000"
             iterations="1"
             fill="backwards"
@@ -440,7 +446,7 @@ class ArchiveNow extends LitElement {
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
-              <img class="h-auto w-16 lg:w-24" src=${linkySrc} />
+              <img class="size-20 lg:size-32" src=${linkySrc} />
             </button>
           </sl-animation>
         </div>
@@ -520,6 +526,7 @@ class ArchiveNow extends LitElement {
   private removeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
+    this.linkyAnimation.delay = 0;
     this.linkyAnimation.duration = 300;
     this.linkyAnimation.name = "fadeOut";
     this.linkyAnimation.fill = "both";
@@ -529,6 +536,7 @@ class ArchiveNow extends LitElement {
   private shakeLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
 
+    this.linkyAnimation.delay = 0;
     this.linkyAnimation.duration = 1800;
     this.linkyAnimation.name = "jello";
     this.linkyAnimation.play = true;
