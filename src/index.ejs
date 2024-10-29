@@ -4,7 +4,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, viewport-fit=cover" />
+  <meta name="description" content="<%= description %>" />
+  <link rel="icon" type="image/svg+xml" href="<%= homeUrl %>/favicon.svg" />
+  <link rel="apple-touch-icon" type="image/svg+xml" href="<%= homeUrl %>/apple-touch-icon.png" />
   <link rel="preconnect" href="https://wr-static.sfo3.cdn.digitaloceanspaces.com/" />
+  <title>
+    <%- title %>
+  </title>
+  <link rel="sitemap" href="<%= homeUrl %>/sitemap-index.xml" />
+
+  <meta property="og:image" content="<%= homeUrl %>/_astro/og.BLv3EsOH.avif" />
+  <meta property="og:image:alt" content="Webrecorder">
+  <meta property="og:title" content="<%= title %>" />
+  <meta property="og:url" content="<%= homeUrl %>" />
+  <meta property="og:description" content="<%= description %>" />
+  <meta property="og:site_name" content="Webrecorder" />
+  <meta property="og:type" content="website" />
+  <!-- Twitter Tags -->
+  <meta property="twitter:card" content="website" />
+  <meta property="twitter:site" content="@webrecorder_io" />
+  <meta property="twitter:description" content="<%= description %>" />
+  <meta property="twitter:title" content="<%= title %>" />
+  <meta property="twitter:image" content="<%= homeUrl %>/_astro/og.BLv3EsOH.avif" />
+  <meta property="twitter:image:alt" content="Webrecorder" />
+
+  <meta name="theme-color" content="#4d7c0f" />
+
   <script src="awp-ui.js"></script>
 </head>
 
