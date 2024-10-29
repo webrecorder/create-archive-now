@@ -35,12 +35,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
+          cache: "yarn"
 
       - run: yarn install
       - run: yarn run build
-
-
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -48,7 +47,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: './dist'
+          path: "./dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
