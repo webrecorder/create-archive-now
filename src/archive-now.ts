@@ -131,7 +131,7 @@ class ArchiveNow extends LitElement {
     super.connectedCallback();
 
     const theme = new CSSStyleSheet();
-    theme.replaceSync(themeCSS as string);
+    theme.replaceSync(themeCSS);
     this.shadowRoot?.adoptedStyleSheets.push(theme);
 
     this.addEventListener("click", this.hideHintOnClickOutside);

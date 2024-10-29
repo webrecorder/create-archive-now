@@ -40,12 +40,6 @@ export default {
       ],
     },
     colors: merge(colors, {
-      cyan: {
-        700: {
-          DEFAULT: colors.cyan["700"],
-          deep: "var(--color-cyan-700-deep)",
-        },
-      },
       currentColor: "currentColor",
     }),
     extend: {},
