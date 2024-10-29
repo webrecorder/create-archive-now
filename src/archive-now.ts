@@ -81,18 +81,17 @@ class ArchiveNow extends LitElement {
       </p>`,
     error: html`
       <p class="mb-3">
-        This page may not work as expected in this limited demo.
-      </p>
-      <p>
-        For more comprehensive archiving, try using our
+        Some pages may not work as expected in this limited demo. For more
+        comprehensive archiving, try our
         <a
           class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
           href="http://webrecorder.net/archivewebpage"
           target="_blank"
           >ArchiveWeb.page</a
         >
-        browser extension instead (it’s free, too!)
+        browser extension (it’s free, too!)
       </p>
+      <p>Or, try another page by entering a different URL.</p>
     `,
     "over-page-min": html`
       <p class="mb-3">
@@ -204,7 +203,7 @@ class ArchiveNow extends LitElement {
               "It looks like this might not be a valid URL or the site is down.";
           } else if (event.data.status === 429) {
             this.errorMessage =
-              "It looks like you’ve been rate limited (by this site, not by us.)";
+              "It looks like you’ve been rate limited (by the site, not by us.)";
           } else {
             this.errorMessage = "It looks like this page could not be loaded.";
           }
