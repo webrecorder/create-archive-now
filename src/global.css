@@ -8,7 +8,7 @@
     font-style: normal;
     font-weight: 300 800;
     font-display: swap;
-    src: url("https://wr-static.sfo3.cdn.digitaloceanspaces.com/fonts/recursive/recursive-latin.woff2")
+    src: url("https://cdn.webrecorder.net/fonts/recursive/recursive-latin.woff2")
       format("woff2");
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
       U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122,
@@ -20,7 +20,7 @@
     font-style: normal;
     src:
       local("Konsole"),
-      url("https://wr-static.sfo3.cdn.digitaloceanspaces.com/fonts/konsole/Konsolev1.1-VF.woff2")
+      url("https://cdn.webrecorder.net/fonts/konsole/Konsolev1.1-VF.woff2")
         format("woff2");
   }
   @font-face {
@@ -31,7 +31,7 @@
     font-feature-settings: "ss04";
     src:
       local("Inter Variable"),
-      url("https://wr-static.sfo3.cdn.digitaloceanspaces.com/fonts/inter/InterVariable.woff2")
+      url("https://cdn.webrecorder.net/fonts/inter/InterVariable.woff2")
         format("woff2");
   }
   @font-face {
@@ -42,7 +42,7 @@
     font-feature-settings: "ss04";
     src:
       local("Inter Variable"),
-      url("https://wr-static.sfo3.cdn.digitaloceanspaces.com/fonts/inter/InterVariable-Italic.woff2")
+      url("https://cdn.webrecorder.net/fonts/inter/InterVariable-Italic.woff2")
         format("woff2");
   }
   html {
