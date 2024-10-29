@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:host {
+  --sl-color-primary-50: theme(colors.cyan.50);
+  --sl-color-primary-100: theme(colors.cyan.100);
+  --sl-color-primary-200: theme(colors.cyan.200);
+  --sl-color-primary-300: theme(colors.cyan.300);
+  --sl-color-primary-400: theme(colors.cyan.400);
+  --sl-color-primary-500: theme(colors.cyan.500);
+  --sl-color-primary-600: theme(colors.cyan.600);
+  --sl-color-primary-700: theme(colors.cyan.700.DEFAULT);
+  --sl-color-primary-800: theme(colors.cyan.800);
+  --sl-color-primary-900: theme(colors.cyan.900);
+}
+
+@layer components {
+  sl-button::part(base) {
+    @apply rounded-md shadow-md;
+  }
+
+  sl-button[variant="primary"]::part(base) {
+    background-color: theme(colors.cyan.400);
+    border-color: theme(colors.cyan.400);
+  }
+
+  sl-button[variant="primary"]::part(base):hover {
+    background-color: theme(colors.cyan.500);
+  }
+
+  sl-dialog::part(panel) {
+    @apply rounded-lg shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50;
+  }
+
+  sl-dialog::part(header) {
+    @apply text-xl font-semibold;
+  }
+}

@@ -6,15 +6,19 @@ import {
   type TemplateResult,
 } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
-import type { SlAnimation } from "@shoelace-style/shoelace";
+import type { SlAnimation, SlDialog, SlInput } from "@shoelace-style/shoelace";
+import { getFormControls } from "@shoelace-style/shoelace/dist/utilities/form.js";
 
 import themeCSS from "./archive-now.stylesheet.css";
 import linkyHelloSrc from "./assets/Linky-Hello.avif";
 import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
+// TODO Replace icon
+import faListIconSrc from "./assets/fa-list-icon.svg";
 
 import "./shoelace";
 
 const PAGE_COUNT_MIN = 10;
+const DEFAULT_URL = "https://example.com/";
 
 type Hint = "first-load" | "page-load" | "error" | "over-page-min" | "finished";
 
@@ -31,6 +35,9 @@ class ArchiveNow extends LitElement {
 
   @state()
   private errorMessage = "";
+
+  @state()
+  private showCreateDialog = false;
 
   @state()
   private showHint = true;
@@ -62,18 +69,18 @@ class ArchiveNow extends LitElement {
   private hintMessages: Record<Hint, TemplateResult> = {
     "first-load": html`<p class="mb-3">
         Browse and interact with the website like you would normally. Every link
-        that you follow will be archived.
+        you follow will be archived.
       </p>
       <p>
         When you’re done, click the
         <strong class="font-semibold text-brand-green">Finish</strong> button.
       </p>`,
     "page-load": html`<p class="mb-3">
-        All the pages visited so far will be included in your archive.
+        All pages visited so far will be included in your archive.
       </p>
       <p class="mb-3">
-        You can also enter in a new URL to load any page that’s not linked from
-        the page you’re currently viewing.
+        You can also enter a new URL to load any page that’s not linked from the
+        page you’re currently viewing.
       </p>
       <p>
         Click
@@ -82,8 +89,8 @@ class ArchiveNow extends LitElement {
       </p>`,
     error: html`
       <p class="mb-3">
-        Some pages may not work as expected in this limited demo. For more
-        comprehensive archiving, try our
+        This is a limited demo, and some pages may not work as expected. For
+        more comprehensive archiving, try our
         <a
           class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
           href="http://webrecorder.net/archivewebpage"
@@ -92,7 +99,7 @@ class ArchiveNow extends LitElement {
         >
         browser extension (it’s free, too!)
       </p>
-      <p>Or, try another page by entering a different URL.</p>
+      <p>Or try another page by entering a different URL.</p>
     `,
     "over-page-min": html`
       <p class="mb-3">
@@ -112,17 +119,17 @@ class ArchiveNow extends LitElement {
     `,
     finished: html`
       <p class="mb-3">
-        Everything you can see here is now being rendered from your web archive
-        without the involvement of the original server.
+        Click a page under <strong class="font-medium">Page Title</strong> to
+        load it directly from your web archive!
       </p>
       <p class="mb-3">
-        To share a link to this archive, import it to
-        <strong class="font-semibold">Browsertrix</strong> and add it to a
-        collection.
-      </p>
-      <p class="mb-3">
-        You can also download your archive and view it at any time with
-        <strong class="font-semibold">ReplayWeb.page</strong>.
+        Once a page is loaded, you can click the
+        <img
+          class="inline-block size-5 align-[-0.3rem] opacity-70"
+          src=${faListIconSrc}
+          alt="Browse Contents"
+        />
+        icon to view a list of all archived pages.
       </p>
     `,
   };
@@ -201,10 +208,10 @@ class ArchiveNow extends LitElement {
               "It looks like this site is blocking us from loading it.";
           } else if (event.data.status > 500) {
             this.errorMessage =
-              "It looks like this might not be a valid URL or the site is down.";
+              "It looks like this might not be a valid URL, or the site is down.";
           } else if (event.data.status === 429) {
             this.errorMessage =
-              "It looks like you’ve been rate limited (by the site, not by us.)";
+              "It looks like this site is rate limiting or blocking you.";
           } else {
             this.errorMessage = "It looks like this page could not be loaded.";
           }
@@ -218,7 +225,7 @@ class ArchiveNow extends LitElement {
 
         case "rate-limited":
           this.errorMessage =
-            "It looks like you’ve been rate limited (by this site, not by us.)";
+            "It looks like this site is rate limiting or blocking you.";
           break;
 
         case "post-request-failed":
@@ -283,7 +290,7 @@ class ArchiveNow extends LitElement {
         </a>
       </header>
       <div
-        class="${this.showHint
+        class="${this.showHint || this.showCreateDialog
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
           : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
@@ -293,11 +300,13 @@ class ArchiveNow extends LitElement {
               sandbox="true"
               coll=${this.collId}
               deepLink="true"
-              url="https://example.com/"
+              url=${DEFAULT_URL}
             ></archive-web-page>`
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
-      <div class="mr-16 overflow-auto [grid-area:detail] lg:mr-0">
+      <div
+        class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
+      >
         <h2
           class="my-4 font-display text-xl font-semibold leading-none lg:text-2xl"
         >
@@ -311,20 +320,82 @@ class ArchiveNow extends LitElement {
       <div
         class="pointer-events-none absolute bottom-0 right-0 size-32 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
-      ${this.renderLinky()}
+      ${this.renderLinky()} ${this.renderUrlDialog()}
     `;
   }
 
   private renderFinished() {
     return html`
-      <div>
+      <div class="text-pretty leading-relaxed">
+        <p class="mb-4">
+          Download your archive and view it at any time with
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://replayweb.page"
+            target="_blank"
+            >ReplayWeb.page</a
+          >.
+        </p>
         <sl-button
+          class="block w-full"
           href="${this.downloadUrl}"
           target="_blank"
-          variant="primary"
           size="large"
-          >Download Archive</sl-button
+          variant="primary"
         >
+          <sl-icon slot="prefix" name="download"></sl-icon>
+          Download Archive (.wacz)
+        </sl-button>
+
+        <hr class="my-6 border-brand-green/20" />
+
+        <h3 class="mb-3 text-lg font-semibold leading-none">
+          Share your archive
+        </h3>
+        <p class="mb-3">
+          To share your archive, create a public web archive collection with
+          <strong class="font-semibold">Browsertrix</strong>, our complete
+          archiving platform.
+        </p>
+        <ol class="list-inside list-decimal">
+          <li>
+            Log in or
+            <a
+              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+              href="http://webrecorder.net/browsertrix#getting-started"
+              target="_blank"
+              >sign up for Browsertrix</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+              href="https://docs.browsertrix.com/user-guide/archived-items/#uploading-web-archives"
+              target="_blank"
+              >Import your archive</a
+            >
+          </li>
+          <li>
+            <a
+              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+              href="https://docs.browsertrix.com/user-guide/collection/"
+              target="_blank"
+              >Create a public collection</a
+            >
+          </li>
+        </ol>
+
+        <hr class="my-6 border-brand-green/20" />
+
+        <div>
+          <button
+            class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
+            @click=${() => (this.showCreateDialog = true)}
+          >
+            <sl-icon name="arrow-clockwise" class="text-lg"></sl-icon>
+            <span class="text-sm">Create another archive</span>
+          </button>
+        </div>
       </div>
     `;
   }
@@ -335,11 +406,11 @@ class ArchiveNow extends LitElement {
     if (pageCount < 1) return;
 
     return html`
-      <h3 class="mb-3 font-medium">
+      <h3 class="mb-3 font-semibold leading-none">
         Archiving ${pageCount.toLocaleString()}
         ${pageCount === 1 ? "page" : "pages"}
       </h3>
-      <ul class="divide-y font-monospace text-sm">
+      <ul class="divide-y divide-brand-green/20 font-monospace text-sm">
         ${Array.from(this.pageUrls.values()).map(
           (url) => html`
             <li
@@ -454,10 +525,54 @@ class ArchiveNow extends LitElement {
     `;
   }
 
+  private renderUrlDialog() {
+    return html`
+      <sl-dialog
+        label="Create New Archive"
+        class="[--header-spacing:theme(spacing.3)] [--width:70ch]"
+        ?open=${this.showCreateDialog}
+        @sl-hide=${() => (this.showCreateDialog = false)}
+      >
+        <form
+          @submit=${async (e: SubmitEvent) => {
+            e.preventDefault();
+
+            const form = e.currentTarget as HTMLFormElement;
+            const input = getFormControls(form)[0] as SlInput;
+
+            if ("invalid" in input.dataset) {
+              return;
+            }
+
+            await this.startNewArchive(input.value);
+
+            input.value = "";
+            this.showCreateDialog = false;
+          }}
+        >
+          <div class="flex items-end gap-3 px-3 pb-3">
+            <sl-input
+              name="url"
+              class="flex-1"
+              label="Enter a URL"
+              placeholder=${DEFAULT_URL.replace(/\/$/, "")}
+              type="url"
+              autocomplete="off"
+              required
+            ></sl-input>
+            <sl-button type="submit" variant="primary"
+              >Start Archiving</sl-button
+            >
+          </div>
+        </form>
+      </sl-dialog>
+    `;
+  }
+
   private renderBackdrop() {
     return html`<div
       id="hintBackdrop"
-      class="fixed inset-0 bg-cyan-900/30 transition-opacity"
+      class="fixed inset-0 bg-[var(--sl-overlay-background-color)] transition-opacity"
     ></div>`;
   }
 
@@ -560,6 +675,19 @@ class ArchiveNow extends LitElement {
     }
 
     this.showHint = false;
+  }
+
+  private async startNewArchive(archiveUrl: string) {
+    this.hint = "first-load";
+    this.isFinished = false;
+    this.downloadUrl = "";
+    this.collId = randomId();
+    this.pageCount = 0;
+    this.pageUrls = [];
+
+    await this.updateComplete;
+
+    window.location.hash = `url=${window.encodeURIComponent(archiveUrl)}`;
   }
 }
 
