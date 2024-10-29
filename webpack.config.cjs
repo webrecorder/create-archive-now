@@ -1,11 +1,9 @@
 const path = require("path");
-const webpack = require("webpack");
-const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
-const package_json = require("./package.json");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -93,6 +91,7 @@ module.exports = {
     //    { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/replay/sw.js", to: "../replay/sw.js" }
     //  ],
     //}),
+    new ForkTsCheckerWebpackPlugin({}),
     new MiniCssExtractPlugin(),
     new CopyPlugin({
       patterns: [
@@ -104,9 +103,15 @@ module.exports = {
           ),
           to: path.resolve(__dirname, "dist/shoelace/assets"),
         },
-        { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/ui.js", to: path.resolve(__dirname, "dist/awp-ui.js") },
-        { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/replay/sw.js", to: path.resolve(__dirname, "dist/replay/sw.js") }
-       ],
+        {
+          from: "./node_modules/@webrecorder/archivewebpage/dist/embed/ui.js",
+          to: path.resolve(__dirname, "dist/awp-ui.js"),
+        },
+        {
+          from: "./node_modules/@webrecorder/archivewebpage/dist/embed/replay/sw.js",
+          to: path.resolve(__dirname, "dist/replay/sw.js"),
+        },
+      ],
     }),
     new HtmlWebpackPlugin({
       title: "Archive Now",
