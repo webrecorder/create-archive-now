@@ -9,7 +9,8 @@ import { customElement, query, state } from "lit/decorators.js";
 import type { SlAnimation } from "@shoelace-style/shoelace";
 
 import themeCSS from "./archive-now.stylesheet.css";
-import linkySrc from "./assets/linky-2.avif";
+import linkyHelloSrc from "./assets/Linky-Hello.avif";
+import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
 
 import "./shoelace";
 
@@ -308,7 +309,7 @@ class ArchiveNow extends LitElement {
       ${this.renderBackdrop()}
 
       <div
-        class="pointer-events-none absolute bottom-0 right-0 size-24 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
+        class="pointer-events-none absolute bottom-0 right-0 size-32 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
       ${this.renderLinky()}
     `;
@@ -355,6 +356,7 @@ class ArchiveNow extends LitElement {
   private renderLinky() {
     let title = "Let’s archive this website!";
     let message = this.hintMessages[this.hint];
+    let linkySrc = linkyHelloSrc;
 
     switch (this.hint) {
       case "error": {
@@ -365,6 +367,7 @@ class ArchiveNow extends LitElement {
             : nothing}
           ${message}
         `;
+        linkySrc = linkyConcernedSrc;
         break;
       }
       case "page-load": {
@@ -427,7 +430,7 @@ class ArchiveNow extends LitElement {
             </div>
           </sl-animation>
         </div>
-        <div class="p-3">
+        <div>
           <sl-animation
             id="linkyAnimation"
             name="lightSpeedInRight"
@@ -443,7 +446,7 @@ class ArchiveNow extends LitElement {
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
-              <img class="h-auto w-16 lg:w-24" src=${linkySrc} />
+              <img class="size-20 lg:size-32" src=${linkySrc} />
             </button>
           </sl-animation>
         </div>
