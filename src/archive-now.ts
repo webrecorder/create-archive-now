@@ -11,6 +11,8 @@ import type { SlAnimation } from "@shoelace-style/shoelace";
 import themeCSS from "./archive-now.stylesheet.css";
 import linkyHelloSrc from "./assets/Linky-Hello.avif";
 import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
+// TODO Replace icon
+import faListIconSrc from "./assets/fa-list-icon.svg";
 
 import "./shoelace";
 
@@ -115,10 +117,14 @@ class ArchiveNow extends LitElement {
         All the pages you see now are loaded directly from your web archive,
         bypassing the Internet.
       </p>
-      <p class="mb-3">
-        You can test this out by disabling your Wi-Fi or mobile data and then
-        browsing the archive! (Just don’t forget to re-enable your Internet
-        connection to download the archive. 😉)
+      <p>
+        Browse your archive to see what's included! Click on the
+        <img
+          class="inline-block size-5 align-[-0.3rem] opacity-70"
+          src=${faListIconSrc}
+          alt="Browse Contents"
+        />
+        icon to view a list of archived pages.
       </p>
     `,
   };
