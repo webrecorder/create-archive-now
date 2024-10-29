@@ -334,6 +334,7 @@ class ArchiveNow extends LitElement {
           href="${this.downloadUrl}"
           target="_blank"
           size="large"
+          variant="primary"
         >
           <sl-icon slot="prefix" name="download"></sl-icon>
           Download Archive (.wacz)
@@ -386,11 +387,11 @@ class ArchiveNow extends LitElement {
     if (pageCount < 1) return;
 
     return html`
-      <h3 class="mb-3 font-medium">
+      <h3 class="mb-3 font-semibold leading-none">
         Archiving ${pageCount.toLocaleString()}
         ${pageCount === 1 ? "page" : "pages"}
       </h3>
-      <ul class="divide-y font-monospace text-sm">
+      <ul class="divide-y divide-brand-green/20 font-monospace text-sm">
         ${Array.from(this.pageUrls.values()).map(
           (url) => html`
             <li
