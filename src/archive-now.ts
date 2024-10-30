@@ -763,11 +763,20 @@ class ArchiveNow extends LitElement {
     this.linkyAnimation.name = "fadeOut";
     this.linkyAnimation.fill = "both";
     this.linkyAnimation.play = true;
+    this.linkyAnimation.addEventListener(
+      "sl-finish",
+      () => {
+        this.linkyAnimation!.style.display = "none";
+      },
+      {
+        once: true,
+      },
+    );
   }
 
   private addLinky() {
     if (!this.linkyAnimation || this.linkyAnimation.play) return;
-
+    this.linkyAnimation.style.display = "block";
     this.linkyAnimation.delay = 0;
     this.linkyAnimation.duration = 1000;
     this.linkyAnimation.name = "lightSpeedInRight";
