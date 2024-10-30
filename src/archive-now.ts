@@ -74,7 +74,7 @@ class ArchiveNow extends LitElement {
       <p>
         When you’re done, click the
         <strong
-          class="rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white"
+          class="cursor-default rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
           >Finish</strong
         >
         button.
@@ -89,7 +89,7 @@ class ArchiveNow extends LitElement {
       <p>
         Click
         <strong
-          class="rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white"
+          class="cursor-default rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
           >Finish</strong
         >
         to finalize your archive.
