@@ -8,10 +8,13 @@ import {
 import { customElement, query, state } from "lit/decorators.js";
 import type { SlAnimation, SlInput } from "@shoelace-style/shoelace";
 import { getFormControls } from "@shoelace-style/shoelace/dist/utilities/form.js";
+import prettyBytes from "pretty-bytes";
 
 import themeCSS from "./archive-now.stylesheet.css";
 import linkyHelloSrc from "./assets/Linky-Hello.avif";
 import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
+import btrixIconSrc from "./assets/brand/browsertrix-icon-color.svg";
+import awpIconSrc from "./assets/brand/archivewebpage-icon-color.svg";
 // TODO Replace icon
 import faListIconSrc from "./assets/fa-list-icon.svg";
 
@@ -50,6 +53,9 @@ class ArchiveNow extends LitElement {
 
   @state()
   private pageUrls: string[] = [];
+
+  @state()
+  private sizeBytes = 0;
 
   @query("#hintContainer")
   private hintContainer?: HTMLDivElement;
@@ -200,6 +206,12 @@ class ArchiveNow extends LitElement {
     }
   }
 
+  protected updated(_changedProperties: PropertyValues): void {
+    if (_changedProperties.has("isFinished") && this.isFinished) {
+      void this.updatePages();
+    }
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues): void {
     window.addEventListener("message", (event) => {
       switch (event.data.type) {
@@ -282,9 +294,12 @@ class ArchiveNow extends LitElement {
       return;
     }
 
-    const resp = await win.fetch(`./w/api/c/${this.collId}?all=1`);
+    const resp = await win.fetch(
+      `./w/api/c/${this.collId}${this.isFinished ? "" : "?all=1"}`,
+    );
     try {
-      const { pages } = await resp.json();
+      const { pages, size } = await resp.json();
+      this.sizeBytes = size;
       this.pageUrls = pages.map((page: { url: string }) => page.url);
     } catch (e) {
       // ignore
@@ -338,6 +353,15 @@ class ArchiveNow extends LitElement {
   }
 
   private renderFinished() {
+    const card = (icon: string, title: string, content: TemplateResult) =>
+      html` <section class="rounded-xl bg-white p-8 ring-1 ring-stone-600/10">
+        <header>
+          <img src=${icon} class="size-9 object-contain" />
+          <h4>${title}</h4>
+        </header>
+        ${content}
+      </section>`;
+
     return html`
       <div class="text-pretty leading-relaxed">
         <p class="mb-4">
@@ -360,43 +384,31 @@ class ArchiveNow extends LitElement {
           Download Archive (.wacz)
         </sl-button>
 
+        <dl
+          class="mt-2 flex justify-between text-sm leading-none text-stone-500"
+        >
+          <div class="flex gap-1">
+            <dt>Total pages:</dt>
+            <dd class="font-medium">
+              ${this.pageUrls.length.toLocaleString()}
+            </dd>
+          </div>
+          <div class="flex gap-1">
+            <dt>Total size:</dt>
+            <dd class="font-medium">${prettyBytes(this.sizeBytes)}</dd>
+          </div>
+        </dl>
+
         <hr class="my-6 border-brand-green/20" />
 
-        <h3 class="mb-3 text-lg font-semibold leading-none">
-          Share your archive
-        </h3>
+        <h3 class="mb-3 text-lg font-semibold leading-none">Next steps</h3>
         <p class="mb-3">
-          To share your archive, create a public web archive collection with
-          <strong class="font-semibold">Browsertrix</strong>, our complete
-          archiving platform.
+          Ready to go beyond the demo? Archive what matters to you with the
+          Webrecorder tool that fits your workflow.
         </p>
-        <ol class="list-inside list-decimal">
-          <li>
-            Log in or
-            <a
-              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-              href="http://webrecorder.net/browsertrix#getting-started"
-              target="_blank"
-              >sign up for Browsertrix</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-              href="https://docs.browsertrix.com/user-guide/archived-items/#uploading-web-archives"
-              target="_blank"
-              >Import your archive</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-              href="https://docs.browsertrix.com/user-guide/collection/"
-              target="_blank"
-              >Create a public collection</a
-            >
-          </li>
-        </ol>
+
+        ${card(btrixIconSrc, "Browsertrix", html`TODO`)}
+        ${card(awpIconSrc, "ArchiveWeb.page", html`TODO`)}
 
         <hr class="my-6 border-brand-green/20" />
 
