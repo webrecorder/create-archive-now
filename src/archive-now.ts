@@ -345,7 +345,7 @@ class ArchiveNow extends LitElement {
       <div
         class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
-        <div class="mb-3 mt-1">
+        <div class="mb-3 mt-3">
           <div
             class="${this.isFinished
               ? "translate-x-0"
@@ -397,12 +397,12 @@ class ArchiveNow extends LitElement {
       html` <section
         class="${primary
           ? "border-brand-green shadow-lg shadow-lime-600/10 bg-white"
-          : "border-brand-green/30 bg-white/85"} mb-2 rounded-xl border bg-white px-6 pb-3 pt-4"
+          : "border-brand-green/30 bg-white/85"} mb-4 rounded-xl border bg-white p-6 pb-5"
       >
         <header class="mb-3 flex items-center gap-1">
           <img src=${icon} class="h-6 w-auto" alt=${title} />
         </header>
-        <div class="mb-4 text-pretty leading-relaxed">${body}</div>
+        <div class="text-pretty leading-relaxed">${body}</div>
         <div class="text-right">
           <a
             class="group items-baseline gap-1.5 text-right font-medium leading-4 text-cyan-500 transition-colors hover:text-cyan-400"
@@ -461,7 +461,7 @@ class ArchiveNow extends LitElement {
 
         <hr class="my-3 rounded-md border-brand-green/30" />
 
-        <h3 class="mt-4 text-sm font-semibold leading-none">Next Steps</h3>
+        <h3 class="mt-4 mb-4 text-sm font-semibold leading-none text-stone-700">Next Steps</h3>
         <p class="mb-2 mt-1 text-sm">View your archive any time with
           <a
             class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
@@ -469,8 +469,8 @@ class ArchiveNow extends LitElement {
             target="_blank"
             >ReplayWeb.page</a>.</p>
 
-        <p class="mb-2 mt-1 text-sm">
-          Ready to go beyond the demo? Try out these other Webrecorder tools that best fit your archiving needs:
+        <p class="mb-4 mt-1 text-sm">
+          Ready to go beyond the demo? Find the Webrecorder tools that best fit your archiving needs.
         </p>
 
         ${card(
