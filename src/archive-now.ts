@@ -329,7 +329,7 @@ class ArchiveNow extends LitElement {
       <div
         class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
-        <div class="mb-6 mt-3">
+        <div class="mb-3 mt-1">
           <div
             class="${this.isFinished
               ? "translate-x-0"
@@ -352,11 +352,12 @@ class ArchiveNow extends LitElement {
                 `}
           </div>
         </div>
+        <!-- FOR LINKY
         <h2
           class="mb-4 font-display text-xl font-semibold leading-none lg:text-2xl"
         >
           Your Web Archive
-        </h2>
+        </h2>-->
         ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
       </div>
 
@@ -380,9 +381,9 @@ class ArchiveNow extends LitElement {
       html` <section
         class="${primary
           ? "border-brand-green shadow-lg shadow-lime-600/10 bg-white"
-          : "border-brand-green/30 bg-white/85"} mb-4 rounded-xl border bg-white px-6 pb-4 pt-5"
+          : "border-brand-green/30 bg-white/85"} mb-2 rounded-xl border bg-white px-6 pb-3 pt-4"
       >
-        <header class="mb-3 flex items-center gap-2">
+        <header class="mb-1 flex items-center gap-1">
           <img src=${icon} class="size-6 object-contain" />
           <h4 class="font-logo text-xl">${title}</h4>
         </header>
@@ -403,6 +404,7 @@ class ArchiveNow extends LitElement {
 
     return html`
       <div class="text-pretty leading-relaxed">
+        <!-- FOR LINKY
         <p class="mb-3">
           Everything you see is now loaded directly from your web archive!
         </p>
@@ -413,7 +415,7 @@ class ArchiveNow extends LitElement {
             href="http://replayweb.page"
             target="_blank"
             >ReplayWeb.page</a
-          >.
+          >.-->
         </p>
         <sl-button
           class="plausible-event-name=download+archive block w-full"
@@ -427,7 +429,7 @@ class ArchiveNow extends LitElement {
         </sl-button>
 
         <dl
-          class="mt-4 flex justify-between text-sm leading-none text-stone-500"
+          class="mt-2 flex justify-between text-sm leading-none text-stone-500"
         >
           <div class="flex gap-1">
             <dt>Total pages:</dt>
@@ -441,12 +443,11 @@ class ArchiveNow extends LitElement {
           </div>
         </dl>
 
-        <hr class="my-6 border-brand-green/30" />
+        <hr class="my-3 border-brand-green/30" />
 
-        <h3 class="mb-3 text-lg font-semibold leading-none">Next Steps</h3>
-        <p class="mb-4">
-          Ready to go beyond the demo? Archive what matters to you with the
-          Webrecorder tool that fits your workflow.
+        <h3 class="mt-6 text-sm font-semibold leading-none">Next Steps</h3>
+        <p class="mb-2 mt-1 text-sm">
+          Ready to go beyond the demo? Try out these other Webrecorder tools that best fit your archiving needs
         </p>
 
         ${card(
@@ -454,8 +455,8 @@ class ArchiveNow extends LitElement {
           "Browsertrix",
           html`
             <p>
-              Download entire websites, automatically create snapshots of
-              websites on a schedule, and share your archives with the world.
+              Automate archiving entire websites on schedule and share your
+              archives with others.
             </p>
           `,
           {
@@ -469,17 +470,18 @@ class ArchiveNow extends LitElement {
           "ArchiveWeb.page",
           html`
             <p>
-              Archive without leaving a website by adding our Chrome extension
-              to your browser.
+              Archive any web page directly while browsing with our Chrome
+              extension.
             </p>
           `,
           {
             href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
             text: "Install Extension",
           },
+          true,
         )}
 
-        <hr class="my-6 border-brand-green/30" />
+        <hr class="my-3 border-brand-green/30" />
 
         <div>
           <button
