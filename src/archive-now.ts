@@ -6,7 +6,7 @@ import {
   type TemplateResult,
 } from "lit";
 import { customElement, query, state } from "lit/decorators.js";
-import type { SlAnimation, SlDialog, SlInput } from "@shoelace-style/shoelace";
+import type { SlAnimation, SlInput } from "@shoelace-style/shoelace";
 import { getFormControls } from "@shoelace-style/shoelace/dist/utilities/form.js";
 
 import themeCSS from "./archive-now.stylesheet.css";
