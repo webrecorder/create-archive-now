@@ -329,11 +329,11 @@ class ArchiveNow extends LitElement {
       <div
         class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
-        <div class="mb-6 mt-3.5">
+        <div class="mb-6 mt-3">
           <div
             class="${this.isFinished
               ? "translate-x-0"
-              : "-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full border border-brand-green/30 pl-1.5 pr-2.5 text-brand-green transition-transform"
+              : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full border border-brand-green/30 pl-1.5 pr-2.5 text-brand-green transition-transform"
           >
             ${this.isFinished
               ? html`
@@ -341,7 +341,10 @@ class ArchiveNow extends LitElement {
                   <span class="text-sm"> Archive created! </span>
                 `
               : html`
-                  <sl-icon name="arrow-left-circle" class="text-lg"></sl-icon>
+                  <sl-icon
+                    name="arrow-left-circle"
+                    class="hidden text-lg lg:block"
+                  ></sl-icon>
                   <span class="text-sm">
                     Click <strong class="font-semibold">Finish</strong> to
                     finalize your archive
@@ -400,6 +403,9 @@ class ArchiveNow extends LitElement {
 
     return html`
       <div class="text-pretty leading-relaxed">
+        <p class="mb-3">
+          Everything you see is now loaded directly from your web archive!
+        </p>
         <p class="mb-4">
           Download your archive and view it at any time with
           <a
@@ -438,7 +444,7 @@ class ArchiveNow extends LitElement {
         <hr class="my-6 border-brand-green/30" />
 
         <h3 class="mb-3 text-lg font-semibold leading-none">Next Steps</h3>
-        <p class="mb-3">
+        <p class="mb-4">
           Ready to go beyond the demo? Archive what matters to you with the
           Webrecorder tool that fits your workflow.
         </p>
