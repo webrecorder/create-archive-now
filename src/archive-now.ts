@@ -25,6 +25,13 @@ const DEFAULT_URL = "https://example.com/";
 
 type Hint = "first-load" | "page-load" | "error" | "over-page-min" | "finished";
 
+const beforeUnloadHandler = (event: Event) => {
+  event.preventDefault();
+
+  // Included for legacy support, e.g. Chrome/Edge < 119
+  event.returnValue = true;
+};
+
 @customElement("archive-now")
 class ArchiveNow extends LitElement {
   @state()
@@ -287,6 +294,7 @@ class ArchiveNow extends LitElement {
     if (!win) {
       return;
     }
+    this.setWarnOnPageClose(true);
 
     const resp = await win.fetch(
       `./w/api/c/${this.collId}${this.isFinished ? "" : "?all=1"}`,
@@ -297,6 +305,14 @@ class ArchiveNow extends LitElement {
       this.pageUrls = pages.map((page: { url: string }) => page.url);
     } catch (e) {
       // ignore
+    }
+  }
+
+  setWarnOnPageClose(on: boolean) {
+    if (on) {
+      window.addEventListener("beforeunload", beforeUnloadHandler);
+    } else {
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
     }
   }
 
@@ -421,6 +437,7 @@ class ArchiveNow extends LitElement {
           target="_blank"
           size="large"
           variant="primary"
+          @click=${() => this.setWarnOnPageClose(false)}
         >
           <sl-icon slot="prefix" name="download"></sl-icon>
           Download Archive (.wacz)
@@ -441,7 +458,7 @@ class ArchiveNow extends LitElement {
           </div>
         </dl>
 
-        <hr class="my-6 border-brand-green/30" />
+        <hr class="my-6 rounded-md border-brand-green/30" />
 
         <h3 class="mb-3 text-lg font-semibold leading-none">Next Steps</h3>
         <p class="mb-4">
@@ -479,7 +496,7 @@ class ArchiveNow extends LitElement {
           },
         )}
 
-        <hr class="my-6 border-brand-green/30" />
+        <hr class="my-6 rounded-md border-brand-green/30" />
 
         <div>
           <button
