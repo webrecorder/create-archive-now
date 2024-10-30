@@ -74,7 +74,7 @@ class ArchiveNow extends LitElement {
       <p>
         When you’re done, click the
         <strong
-          class="cursor-default rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
+          class="plausible-event-name=fake+finish+button cursor-default rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
           >Finish</strong
         >
         button.
@@ -89,7 +89,7 @@ class ArchiveNow extends LitElement {
       <p>
         Click
         <strong
-          class="cursor-default rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
+          class="plausible-event-name=fake+finish+button cursor-default rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
           >Finish</strong
         >
         to finalize your archive.
@@ -350,7 +350,7 @@ class ArchiveNow extends LitElement {
           >.
         </p>
         <sl-button
-          class="block w-full"
+          class="plausible-event-name=download+archive block w-full"
           href="${this.downloadUrl}"
           target="_blank"
           size="large"
@@ -526,7 +526,7 @@ class ArchiveNow extends LitElement {
             play
           >
             <button
-              class="pointer-events-auto relative z-10 origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
+              class="plausible-event-name=linky+toggle pointer-events-auto relative z-10 origin-bottom transition-transform hover:-rotate-3 hover:skew-x-3"
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
