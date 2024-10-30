@@ -206,19 +206,18 @@ class ArchiveNow extends LitElement {
     }
   }
 
-  protected updated(_changedProperties: PropertyValues): void {
-    if (_changedProperties.has("isFinished") && this.isFinished) {
-      void this.updatePages();
-    }
+  protected async doFinish(downloadUrl: string) {
+    await this.updatePages();
+    this.isFinished = true;
+    this.downloadUrl = downloadUrl;
+    window.location.hash = "";
   }
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     window.addEventListener("message", (event) => {
       switch (event.data.type) {
         case "awp-finish":
-          this.isFinished = true;
-          this.downloadUrl = event.data.downloadUrl;
-          window.location.hash = "";
+          void this.doFinish(event.data.downloadUrl);
           break;
 
         case "live-proxy-url-error":
@@ -288,7 +287,7 @@ class ArchiveNow extends LitElement {
 
   async updatePages() {
     const win = (
-      this.renderRoot?.querySelector("archive-web-page") as any | null
+      this.renderRoot?.querySelector(this.isFinished ? "replay-web-page" : "archive-web-page") as any | null
     )?.renderRoot?.querySelector("iframe")?.contentWindow;
     if (!win) {
       return;
