@@ -471,7 +471,8 @@ class ArchiveNow extends LitElement {
           "Browsertrix",
           html`
             <p>
-              Automate archiving entire websites on schedule and share your archives with the world.
+              Automate archiving entire websites on schedule and share your
+              archives with the world.
             </p>
           `,
           {
@@ -483,12 +484,7 @@ class ArchiveNow extends LitElement {
         ${card(
           awpIconSrc,
           "ArchiveWeb.page",
-          html`
-            <p>
-              Archive while you browse with our Chrome extension
-              to your browser.
-            </p>
-          `,
+          html` <p>Archive while you browse with our Chrome extension.</p> `,
           {
             href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
             text: "Install Extension",
