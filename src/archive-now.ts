@@ -325,19 +325,28 @@ class ArchiveNow extends LitElement {
       <div
         class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
-        <div class="my-4">
+        <div class="mb-6 mt-3.5">
           <div
-            class="-ml-4 inline-flex items-center gap-2 rounded-full border p-1"
+            class="${this.isFinished
+              ? "translate-x-0"
+              : "-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full border border-brand-green/30 pl-1.5 pr-2.5 text-brand-green transition-transform"
           >
-            <sl-icon name="arrow-left-circle" class="text-lg"></sl-icon>
-            <span class="mr-2 text-sm">
-              Click <strong class="font-semibold">Finish</strong> to finalize
-              your archive
-            </span>
+            ${this.isFinished
+              ? html`
+                  <span class="pl-1.5">🎉</span>
+                  <span class="text-sm"> Archive created! </span>
+                `
+              : html`
+                  <sl-icon name="arrow-left-circle" class="text-lg"></sl-icon>
+                  <span class="text-sm">
+                    Click <strong class="font-semibold">Finish</strong> to
+                    finalize your archive
+                  </span>
+                `}
           </div>
         </div>
         <h2
-          class="my-4 font-display text-xl font-semibold leading-none lg:text-2xl"
+          class="mb-4 font-display text-xl font-semibold leading-none lg:text-2xl"
         >
           Your Web Archive
         </h2>
