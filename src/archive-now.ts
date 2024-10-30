@@ -354,7 +354,7 @@ class ArchiveNow extends LitElement {
             ${this.isFinished
               ? html`
                   <span class="pl-1.5">🎉</span>
-                  <span class="text-sm"> Archive created! </span>
+                  <span class="text-sm"> Archiving finished! </span>
                 `
               : html`
                   <sl-icon
@@ -462,9 +462,16 @@ class ArchiveNow extends LitElement {
 
         <hr class="my-3 rounded-md border-brand-green/30" />
 
-        <h3 class="mt-6 text-sm font-semibold leading-none">Next Steps</h3>
+        <h3 class="mt-4 text-sm font-semibold leading-none">Next Steps</h3>
+        <p class="mb-2 mt-1 text-sm">View your archive any time with
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://replayweb.page"
+            target="_blank"
+            >ReplayWeb.page</a>.</p>
+
         <p class="mb-2 mt-1 text-sm">
-          Ready to go beyond the demo? Try out these other Webrecorder tools that best fit your archiving needs
+          Ready to go beyond the demo? Try out these other Webrecorder tools that best fit your archiving needs:
         </p>
 
         ${card(
@@ -558,7 +565,7 @@ class ArchiveNow extends LitElement {
         break;
       }
       case "finished": {
-        title = "Archive created! 🎉";
+        title = "Archiving finished! 🎉";
         break;
       }
       default:
