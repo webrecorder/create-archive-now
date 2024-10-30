@@ -287,7 +287,9 @@ class ArchiveNow extends LitElement {
 
   async updatePages() {
     const win = (
-      this.renderRoot?.querySelector(this.isFinished ? "replay-web-page" : "archive-web-page") as any | null
+      this.renderRoot?.querySelector(
+        this.isFinished ? "replay-web-page" : "archive-web-page",
+      ) as any | null
     )?.renderRoot?.querySelector("iframe")?.contentWindow;
     if (!win) {
       return;
@@ -317,7 +319,7 @@ class ArchiveNow extends LitElement {
         </a>
       </header>
       <div
-        class="${this.showHint || this.showCreateDialog
+        class="${this.isFinished || this.showHint || this.showCreateDialog
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
           : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
@@ -357,23 +359,30 @@ class ArchiveNow extends LitElement {
       title: string,
       body: TemplateResult,
       link: { href: string; text: string },
+      primary = false,
     ) =>
-      html` <section class="rounded-xl bg-white p-8 ring-1 ring-stone-600/10">
-        <header class="flex items-center gap-2">
-          <img src=${icon} class="size-9 object-contain" />
-          <h4 class="font-logo">${title}</h4>
+      html` <section
+        class="${primary
+          ? "border-brand-green shadow-lg shadow-lime-600/10 bg-white"
+          : "border-brand-green/30 bg-white/85"} mb-4 rounded-xl border bg-white px-6 pb-4 pt-5"
+      >
+        <header class="mb-3 flex items-center gap-2">
+          <img src=${icon} class="size-6 object-contain" />
+          <h4 class="font-logo text-xl">${title}</h4>
         </header>
-        <div class="text-pretty leading-relaxed">${body}</div>
-        <a
-          class="group items-baseline gap-1.5 text-right font-medium leading-4 text-cyan-500 transition-colors hover:text-cyan-400"
-          href=${link.href}
-          >${link.text}
-          <sl-icon
-            name="arrow-right"
-            class="inline-block align-[-2px] transition-transform duration-300 ease-out group-hover:translate-x-1"
-          >
-          </sl-icon
-        ></a>
+        <div class="mb-4 text-pretty leading-relaxed">${body}</div>
+        <div class="text-right">
+          <a
+            class="group items-baseline gap-1.5 text-right font-medium leading-4 text-cyan-500 transition-colors hover:text-cyan-400"
+            href=${link.href}
+            >${link.text}
+            <sl-icon
+              name="arrow-right"
+              class="inline-block align-[-2px] transition-transform duration-300 ease-out group-hover:translate-x-1"
+            >
+            </sl-icon
+          ></a>
+        </div>
       </section>`;
 
     return html`
@@ -413,9 +422,9 @@ class ArchiveNow extends LitElement {
           </div>
         </dl>
 
-        <hr class="my-6 border-brand-green/20" />
+        <hr class="my-6 border-brand-green/30" />
 
-        <h3 class="mb-3 text-lg font-semibold leading-none">Next steps</h3>
+        <h3 class="mb-3 text-lg font-semibold leading-none">Next Steps</h3>
         <p class="mb-3">
           Ready to go beyond the demo? Archive what matters to you with the
           Webrecorder tool that fits your workflow.
@@ -434,6 +443,7 @@ class ArchiveNow extends LitElement {
             href: "https://webrecorder.net/browsertrix/",
             text: "Learn More",
           },
+          true,
         )}
         ${card(
           awpIconSrc,
@@ -450,7 +460,7 @@ class ArchiveNow extends LitElement {
           },
         )}
 
-        <hr class="my-6 border-brand-green/20" />
+        <hr class="my-6 border-brand-green/30" />
 
         <div>
           <button
@@ -582,7 +592,7 @@ class ArchiveNow extends LitElement {
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
-              <img class="size-20 lg:size-32" src=${linkySrc} />
+              <img class="size-20 lg:size-28" src=${linkySrc} />
             </button>
           </sl-animation>
         </div>
