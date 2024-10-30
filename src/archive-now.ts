@@ -353,13 +353,28 @@ class ArchiveNow extends LitElement {
   }
 
   private renderFinished() {
-    const card = (icon: string, title: string, content: TemplateResult) =>
+    const card = (
+      icon: string,
+      title: string,
+      body: TemplateResult,
+      link: { href: string; text: string },
+    ) =>
       html` <section class="rounded-xl bg-white p-8 ring-1 ring-stone-600/10">
-        <header>
+        <header class="flex items-center gap-2">
           <img src=${icon} class="size-9 object-contain" />
-          <h4>${title}</h4>
+          <h4 class="font-logo">${title}</h4>
         </header>
-        ${content}
+        <div class="text-pretty leading-relaxed">${body}</div>
+        <a
+          class="group items-baseline gap-1.5 text-right font-medium leading-4 text-cyan-500 transition-colors hover:text-cyan-400"
+          href=${link.href}
+          >${link.text}
+          <sl-icon
+            name="arrow-right"
+            class="inline-block align-[-2px] transition-transform duration-300 ease-out group-hover:translate-x-1"
+          >
+          </sl-icon
+        ></a>
       </section>`;
 
     return html`
@@ -385,7 +400,7 @@ class ArchiveNow extends LitElement {
         </sl-button>
 
         <dl
-          class="mt-2 flex justify-between text-sm leading-none text-stone-500"
+          class="mt-4 flex justify-between text-sm leading-none text-stone-500"
         >
           <div class="flex gap-1">
             <dt>Total pages:</dt>
@@ -407,8 +422,34 @@ class ArchiveNow extends LitElement {
           Webrecorder tool that fits your workflow.
         </p>
 
-        ${card(btrixIconSrc, "Browsertrix", html`TODO`)}
-        ${card(awpIconSrc, "ArchiveWeb.page", html`TODO`)}
+        ${card(
+          btrixIconSrc,
+          "Browsertrix",
+          html`
+            <p>
+              Download entire websites, automatically create snapshots of
+              websites on a schedule, and share your archives with the world.
+            </p>
+          `,
+          {
+            href: "https://webrecorder.net/browsertrix/",
+            text: "Learn More",
+          },
+        )}
+        ${card(
+          awpIconSrc,
+          "ArchiveWeb.page",
+          html`
+            <p>
+              Archive without leaving a website by adding our Chrome extension
+              to your browser.
+            </p>
+          `,
+          {
+            href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
+            text: "Install Extension",
+          },
+        )}
 
         <hr class="my-6 border-brand-green/20" />
 
