@@ -454,8 +454,7 @@ class ArchiveNow extends LitElement {
           "Browsertrix",
           html`
             <p>
-              Download entire websites, automatically create snapshots of
-              websites on a schedule, and share your archives with the world.
+              Automate archiving entire websites on schedule and share your archives with the world.
             </p>
           `,
           {
@@ -469,7 +468,7 @@ class ArchiveNow extends LitElement {
           "ArchiveWeb.page",
           html`
             <p>
-              Archive without leaving a website by adding our Chrome extension
+              Archive while you browse with our Chrome extension
               to your browser.
             </p>
           `,
