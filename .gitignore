@@ -9,3 +9,6 @@ coverage/
 **/.sass-cache/
 **/__pycache__/
 dist/
+replay/
+*.LICENSE.txt
+awp-ui.js
