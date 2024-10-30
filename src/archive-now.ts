@@ -169,17 +169,21 @@ class ArchiveNow extends LitElement {
     }
 
     if (_changedProperties.has("isFinished") && this.isFinished) {
-      this.hint = "finished";
-
-      if (!this.showHint) {
-        this.showHint = true;
+      if (this.showHint) {
+        this.showHint = false;
       }
 
-      window.requestAnimationFrame(() => {
-        this.showBackdrop();
-      });
+      // this.hint = "finished";
 
-      // this.removeLinky();
+      // if (!this.showHint) {
+      //   this.showHint = true;
+      // }
+
+      // window.requestAnimationFrame(() => {
+      //   this.showBackdrop();
+      // });
+
+      this.removeLinky();
     }
 
     if (
