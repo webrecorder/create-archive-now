@@ -8,10 +8,13 @@ import {
 import { customElement, query, state } from "lit/decorators.js";
 import type { SlAnimation, SlInput } from "@shoelace-style/shoelace";
 import { getFormControls } from "@shoelace-style/shoelace/dist/utilities/form.js";
+import prettyBytes from "pretty-bytes";
 
 import themeCSS from "./archive-now.stylesheet.css";
 import linkyHelloSrc from "./assets/Linky-Hello.avif";
 import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
+import btrixLockupSrc from "./assets/brand/browsertrix-lockup-color.svg";
+import awpLockupSrc from "./assets/brand/archivewebpage-lockup-color.svg";
 // TODO Replace icon
 import faListIconSrc from "./assets/fa-list-icon.svg";
 
@@ -58,6 +61,9 @@ class ArchiveNow extends LitElement {
   @state()
   private pageUrls: string[] = [];
 
+  @state()
+  private sizeBytes = 0;
+
   @query("#hintContainer")
   private hintContainer?: HTMLDivElement;
 
@@ -78,28 +84,17 @@ class ArchiveNow extends LitElement {
         Browse and interact with the website like you would normally. Every link
         you follow will be archived.
       </p>
-      <p>
-        When you’re done, click the
-        <strong
-          class="plausible-event-name=fake+finish+button cursor-default rounded-md bg-lime-500 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
-          >Finish</strong
+      <div>
+        <sl-button @click=${() => (this.showHint = false)} size="small" outline
+          >OK, let’s go!</sl-button
         >
-        button.
-      </p>`,
+      </div>`,
     "page-load": html`<p class="mb-3">
         All pages visited so far will be included in your archive.
       </p>
-      <p class="mb-3">
+      <p>
         You can also enter a new URL to load any page that’s not linked from the
         page you’re currently viewing.
-      </p>
-      <p>
-        Click
-        <strong
-          class="plausible-event-name=fake+finish+button cursor-default rounded-md bg-lime-500 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
-          >Finish</strong
-        >
-        to finalize your archive.
       </p>`,
     error: html`
       <p class="mb-3">
@@ -181,17 +176,21 @@ class ArchiveNow extends LitElement {
     }
 
     if (_changedProperties.has("isFinished") && this.isFinished) {
-      this.hint = "finished";
-
-      if (!this.showHint) {
-        this.showHint = true;
+      if (this.showHint) {
+        this.showHint = false;
       }
 
-      window.requestAnimationFrame(() => {
-        this.showBackdrop();
-      });
+      // this.hint = "finished";
 
-      // this.removeLinky();
+      // if (!this.showHint) {
+      //   this.showHint = true;
+      // }
+
+      // window.requestAnimationFrame(() => {
+      //   this.showBackdrop();
+      // });
+
+      this.removeLinky();
     }
 
     if (
@@ -207,13 +206,18 @@ class ArchiveNow extends LitElement {
     }
   }
 
+  protected async doFinish(downloadUrl: string) {
+    await this.updatePages();
+    this.isFinished = true;
+    this.downloadUrl = downloadUrl;
+    window.location.hash = "";
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues): void {
     window.addEventListener("message", (event) => {
       switch (event.data.type) {
         case "awp-finish":
-          this.isFinished = true;
-          this.downloadUrl = event.data.downloadUrl;
-          window.location.hash = "";
+          void this.doFinish(event.data.downloadUrl);
           break;
 
         case "live-proxy-url-error":
@@ -283,16 +287,21 @@ class ArchiveNow extends LitElement {
 
   async updatePages() {
     const win = (
-      this.renderRoot?.querySelector("archive-web-page") as any | null
+      this.renderRoot?.querySelector(
+        this.isFinished ? "replay-web-page" : "archive-web-page",
+      ) as any | null
     )?.renderRoot?.querySelector("iframe")?.contentWindow;
     if (!win) {
       return;
     }
     this.setWarnOnPageClose(true);
 
-    const resp = await win.fetch(`./w/api/c/${this.collId}?all=1`);
+    const resp = await win.fetch(
+      `./w/api/c/${this.collId}${this.isFinished ? "" : "?all=1"}`,
+    );
     try {
-      const { pages } = await resp.json();
+      const { pages, size } = await resp.json();
+      this.sizeBytes = size;
       this.pageUrls = pages.map((page: { url: string }) => page.url);
     } catch (e) {
       // ignore
@@ -319,7 +328,7 @@ class ArchiveNow extends LitElement {
         </a>
       </header>
       <div
-        class="${this.showHint || this.showCreateDialog
+        class="${this.isFinished || this.showHint || this.showCreateDialog
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
           : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
@@ -336,11 +345,35 @@ class ArchiveNow extends LitElement {
       <div
         class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
+        <div class="mb-3 mt-3">
+          <div
+            class="${this.isFinished
+              ? "translate-x-0"
+              : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full border border-brand-green/30 px-2.5 text-brand-green transition-transform lg:pl-1.5"
+          >
+            ${this.isFinished
+              ? html`
+                  <span class="pl-1.5">🎉</span>
+                  <span class="text-sm"> Archiving finished! </span>
+                `
+              : html`
+                  <sl-icon
+                    name="arrow-left-circle"
+                    class="hidden text-lg lg:block"
+                  ></sl-icon>
+                  <span class="text-sm">
+                    Click <strong class="font-semibold">Finish</strong> to
+                    finalize your archive
+                  </span>
+                `}
+          </div>
+        </div>
+        <!-- FOR LINKY
         <h2
-          class="my-4 font-display text-xl font-semibold leading-none lg:text-2xl"
+          class="mb-4 font-display text-xl font-semibold leading-none lg:text-2xl"
         >
           Your Web Archive
-        </h2>
+        </h2>-->
         ${this.isFinished ? this.renderFinished() : this.renderPageUrls()}
       </div>
 
@@ -354,8 +387,42 @@ class ArchiveNow extends LitElement {
   }
 
   private renderFinished() {
+    const card = (
+      icon: string,
+      title: string,
+      body: TemplateResult,
+      link: { href: string; text: string },
+      primary = false,
+    ) =>
+      html` <section
+        class="${primary
+          ? "border-brand-green shadow-lg shadow-lime-600/10 bg-white"
+          : "border-brand-green/30 bg-white/85"} mb-4 rounded-xl border bg-white p-6 pb-5"
+      >
+        <header class="mb-3 flex items-center gap-1">
+          <img src=${icon} class="h-6 w-auto" alt=${title} />
+        </header>
+        <div class="text-pretty leading-relaxed">${body}</div>
+        <div class="text-right">
+          <a
+            class="group items-baseline gap-1.5 text-right font-medium leading-4 text-cyan-500 transition-colors hover:text-cyan-400"
+            href=${link.href}
+            >${link.text}
+            <sl-icon
+              name="arrow-right"
+              class="inline-block align-[-2px] transition-transform duration-300 ease-out group-hover:translate-x-1"
+            >
+            </sl-icon
+          ></a>
+        </div>
+      </section>`;
+
     return html`
       <div class="text-pretty leading-relaxed">
+        <!-- FOR LINKY
+        <p class="mb-3">
+          Everything you see is now loaded directly from your web archive!
+        </p>
         <p class="mb-4">
           Download your archive and view it at any time with
           <a
@@ -363,7 +430,7 @@ class ArchiveNow extends LitElement {
             href="http://replayweb.page"
             target="_blank"
             >ReplayWeb.page</a
-          >.
+          >.-->
         </p>
         <sl-button
           class="plausible-event-name=download+archive block w-full"
@@ -377,45 +444,62 @@ class ArchiveNow extends LitElement {
           Download Archive (.wacz)
         </sl-button>
 
-        <hr class="my-6 rounded-md border-brand-green/20" />
+        <dl
+          class="mt-2 flex justify-between text-sm leading-none text-stone-500"
+        >
+          <div class="flex gap-1">
+            <dt>Total pages:</dt>
+            <dd class="font-medium">
+              ${this.pageUrls.length.toLocaleString()}
+            </dd>
+          </div>
+          <div class="flex gap-1">
+            <dt>Total size:</dt>
+            <dd class="font-medium">${prettyBytes(this.sizeBytes)}</dd>
+          </div>
+        </dl>
 
-        <h3 class="mb-3 text-lg font-semibold leading-none">
-          Share your archive
-        </h3>
-        <p class="mb-3">
-          To share your archive, create a public web archive collection with
-          <strong class="font-semibold">Browsertrix</strong>, our complete
-          archiving platform.
+        <hr class="my-3 rounded-md border-brand-green/30" />
+
+        <h3 class="mt-4 mb-4 text-sm font-semibold leading-none text-stone-700">Next Steps</h3>
+        <p class="mb-2 mt-1 text-sm">View your archive any time with
+          <a
+            class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
+            href="http://replayweb.page"
+            target="_blank"
+            >ReplayWeb.page</a>.</p>
+
+        <p class="mb-4 mt-1 text-sm">
+          Ready to go beyond the demo? Find the Webrecorder tools that best fit your archiving needs.
         </p>
-        <ol class="list-inside list-decimal">
-          <li>
-            Log in or
-            <a
-              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-              href="http://webrecorder.net/browsertrix#getting-started"
-              target="_blank"
-              >sign up for Browsertrix</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-              href="https://docs.browsertrix.com/user-guide/archived-items/#uploading-web-archives"
-              target="_blank"
-              >Import your archive</a
-            >
-          </li>
-          <li>
-            <a
-              class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
-              href="https://docs.browsertrix.com/user-guide/collection/"
-              target="_blank"
-              >Create a public collection</a
-            >
-          </li>
-        </ol>
 
-        <hr class="my-6 rounded-md border-brand-green/20" />
+        ${card(
+          btrixLockupSrc,
+          "Browsertrix",
+          html`
+            <p>
+              Automate archiving entire websites on schedule and share your
+              archives with others.
+            </p>
+          `,
+          {
+            href: "https://webrecorder.net/browsertrix/",
+            text: "Learn More",
+          },
+          true,
+        )}
+        ${card(
+          awpLockupSrc,
+          "ArchiveWeb.page",
+          html` <p>Archive while you browse with our Chrome extension.</p> `,
+          {
+            href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
+            text: "Install Extension",
+          },
+          true,
+        )}
+
+        <hr class="my-3 rounded-md border-brand-green/30" />
 
         <div>
           <button
@@ -455,7 +539,7 @@ class ArchiveNow extends LitElement {
   }
 
   private renderLinky() {
-    let title = "Let’s archive this website!";
+    let title = "Let’s archive this website";
     let message = this.hintMessages[this.hint];
     let linkySrc = linkyHelloSrc;
 
@@ -480,7 +564,7 @@ class ArchiveNow extends LitElement {
         break;
       }
       case "finished": {
-        title = "Archive created! 🎉";
+        title = "Archiving finished! 🎉";
         break;
       }
       default:
@@ -547,7 +631,7 @@ class ArchiveNow extends LitElement {
               @click=${() => (this.showHint = !this.showHint)}
               title="Toggle Linky's hint"
             >
-              <img class="size-20 lg:size-32" src=${linkySrc} />
+              <img class="size-20 lg:size-28" src=${linkySrc} />
             </button>
           </sl-animation>
         </div>
@@ -578,6 +662,9 @@ class ArchiveNow extends LitElement {
 
             input.value = "";
             this.showCreateDialog = false;
+
+            this.hint = "page-load";
+            this.addLinky();
           }}
         >
           <div class="flex items-end gap-3 px-3 pb-3">
@@ -675,6 +762,16 @@ class ArchiveNow extends LitElement {
     this.linkyAnimation.duration = 300;
     this.linkyAnimation.name = "fadeOut";
     this.linkyAnimation.fill = "both";
+    this.linkyAnimation.play = true;
+  }
+
+  private addLinky() {
+    if (!this.linkyAnimation || this.linkyAnimation.play) return;
+
+    this.linkyAnimation.delay = 0;
+    this.linkyAnimation.duration = 1000;
+    this.linkyAnimation.name = "lightSpeedInRight";
+    this.linkyAnimation.fill = "backwards";
     this.linkyAnimation.play = true;
   }
 

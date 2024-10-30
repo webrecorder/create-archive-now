@@ -15,6 +15,18 @@
   --sl-color-primary-900: theme(colors.cyan.900);
 }
 
+@layer utilities {
+  .font-logo {
+    font-family: "Konsole";
+    text-transform: uppercase;
+    font-variation-settings:
+    /* cspell:disable */
+      "wdth" 87,
+      "wght" 750;
+    /* cspell:enable */
+  }
+}
+
 @layer components {
   sl-button::part(base) {
     @apply rounded-md shadow-md;
