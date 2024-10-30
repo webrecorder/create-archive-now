@@ -73,7 +73,11 @@ class ArchiveNow extends LitElement {
       </p>
       <p>
         When you’re done, click the
-        <strong class="font-semibold text-brand-green">Finish</strong> button.
+        <strong
+          class="rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white"
+          >Finish</strong
+        >
+        button.
       </p>`,
     "page-load": html`<p class="mb-3">
         All pages visited so far will be included in your archive.
@@ -84,8 +88,11 @@ class ArchiveNow extends LitElement {
       </p>
       <p>
         Click
-        <strong class="font-semibold text-brand-green">Finish</strong> to
-        finalize your archive.
+        <strong
+          class="rounded-md bg-lime-400 px-2 py-1.5 font-normal text-white"
+          >Finish</strong
+        >
+        to finalize your archive.
       </p>`,
     error: html`
       <p class="mb-3">
