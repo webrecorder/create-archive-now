@@ -377,7 +377,7 @@ class ArchiveNow extends LitElement {
           Download Archive (.wacz)
         </sl-button>
 
-        <hr class="my-6 border-brand-green/20" />
+        <hr class="my-6 rounded-md border-brand-green/20" />
 
         <h3 class="mb-3 text-lg font-semibold leading-none">
           Share your archive
@@ -415,7 +415,7 @@ class ArchiveNow extends LitElement {
           </li>
         </ol>
 
-        <hr class="my-6 border-brand-green/20" />
+        <hr class="my-6 rounded-md border-brand-green/20" />
 
         <div>
           <button
