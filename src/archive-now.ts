@@ -13,8 +13,8 @@ import prettyBytes from "pretty-bytes";
 import themeCSS from "./archive-now.stylesheet.css";
 import linkyHelloSrc from "./assets/Linky-Hello.avif";
 import linkyConcernedSrc from "./assets/Linky-Concerned.avif";
-import btrixIconSrc from "./assets/brand/browsertrix-icon-color.svg";
-import awpIconSrc from "./assets/brand/archivewebpage-icon-color.svg";
+import btrixLockupSrc from "./assets/brand/browsertrix-lockup-color.svg";
+import awpLockupSrc from "./assets/brand/archivewebpage-lockup-color.svg";
 // TODO Replace icon
 import faListIconSrc from "./assets/fa-list-icon.svg";
 
@@ -399,9 +399,8 @@ class ArchiveNow extends LitElement {
           ? "border-brand-green shadow-lg shadow-lime-600/10 bg-white"
           : "border-brand-green/30 bg-white/85"} mb-2 rounded-xl border bg-white px-6 pb-3 pt-4"
       >
-        <header class="mb-1 flex items-center gap-1">
-          <img src=${icon} class="size-6 object-contain" />
-          <h4 class="font-logo text-xl">${title}</h4>
+        <header class="mb-3 flex items-center gap-1">
+          <img src=${icon} class="h-6 w-auto" alt=${title} />
         </header>
         <div class="mb-4 text-pretty leading-relaxed">${body}</div>
         <div class="text-right">
@@ -475,7 +474,7 @@ class ArchiveNow extends LitElement {
         </p>
 
         ${card(
-          btrixIconSrc,
+          btrixLockupSrc,
           "Browsertrix",
           html`
             <p>
@@ -490,7 +489,7 @@ class ArchiveNow extends LitElement {
           true,
         )}
         ${card(
-          awpIconSrc,
+          awpLockupSrc,
           "ArchiveWeb.page",
           html` <p>Archive while you browse with our Chrome extension.</p> `,
           {
