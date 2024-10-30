@@ -642,6 +642,9 @@ class ArchiveNow extends LitElement {
 
             input.value = "";
             this.showCreateDialog = false;
+
+            this.hint = "page-load";
+            this.addLinky();
           }}
         >
           <div class="flex items-end gap-3 px-3 pb-3">
@@ -739,6 +742,16 @@ class ArchiveNow extends LitElement {
     this.linkyAnimation.duration = 300;
     this.linkyAnimation.name = "fadeOut";
     this.linkyAnimation.fill = "both";
+    this.linkyAnimation.play = true;
+  }
+
+  private addLinky() {
+    if (!this.linkyAnimation || this.linkyAnimation.play) return;
+
+    this.linkyAnimation.delay = 0;
+    this.linkyAnimation.duration = 1000;
+    this.linkyAnimation.name = "lightSpeedInRight";
+    this.linkyAnimation.fill = "backwards";
     this.linkyAnimation.play = true;
   }
 
