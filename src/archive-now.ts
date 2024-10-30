@@ -77,28 +77,17 @@ class ArchiveNow extends LitElement {
         Browse and interact with the website like you would normally. Every link
         you follow will be archived.
       </p>
-      <p>
-        When you’re done, click the
-        <strong
-          class="plausible-event-name=fake+finish+button cursor-default rounded-md bg-lime-500 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
-          >Finish</strong
+      <div>
+        <sl-button @click=${() => (this.showHint = false)} size="small" outline
+          >OK, let’s go!</sl-button
         >
-        button.
-      </p>`,
+      </div>`,
     "page-load": html`<p class="mb-3">
         All pages visited so far will be included in your archive.
       </p>
-      <p class="mb-3">
+      <p>
         You can also enter a new URL to load any page that’s not linked from the
         page you’re currently viewing.
-      </p>
-      <p>
-        Click
-        <strong
-          class="plausible-event-name=fake+finish+button cursor-default rounded-md bg-lime-500 px-2 py-1.5 font-normal text-white ring-1 ring-inset ring-lime-700"
-          >Finish</strong
-        >
-        to finalize your archive.
       </p>`,
     error: html`
       <p class="mb-3">
@@ -336,6 +325,17 @@ class ArchiveNow extends LitElement {
       <div
         class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
+        <div class="my-4">
+          <div
+            class="-ml-4 inline-flex items-center gap-2 rounded-full border p-1"
+          >
+            <sl-icon name="arrow-left-circle" class="text-lg"></sl-icon>
+            <span class="mr-2 text-sm">
+              Click <strong class="font-semibold">Finish</strong> to finalize
+              your archive
+            </span>
+          </div>
+        </div>
         <h2
           class="my-4 font-display text-xl font-semibold leading-none lg:text-2xl"
         >
@@ -500,7 +500,7 @@ class ArchiveNow extends LitElement {
   }
 
   private renderLinky() {
-    let title = "Let’s archive this website!";
+    let title = "Let’s archive this website";
     let message = this.hintMessages[this.hint];
     let linkySrc = linkyHelloSrc;
 
