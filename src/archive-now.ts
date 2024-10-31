@@ -358,11 +358,11 @@ class ArchiveNow extends LitElement {
           <div
             class="${this.isFinished
               ? "translate-x-0"
-              : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-brand-green transition-transform lg:pl-1.5"
+              : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full text-brand-green transition-transform"
           >
             ${this.isFinished
               ? html`
-                  <span class="pl-1.5">🎉</span>
+                  🎉
                   <span class="text-sm"> Archiving finished! </span>
                 `
               : html`
