@@ -327,6 +327,15 @@ class ArchiveNow extends LitElement {
           <span class="text-sm">Back to Webrecorder.net</span>
         </a>
       </header>
+      <div class="justify-self-end [grid-area:restart]">
+        <button
+          class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
+          @click=${() => (this.showCreateDialog = true)}
+        >
+          <span class="text-sm">Start over</span>
+          <sl-icon name="arrow-clockwise" class="text-lg"></sl-icon>
+        </button>
+      </div>
       <div
         class="${this.isFinished || this.showHint || this.showCreateDialog
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
@@ -343,17 +352,17 @@ class ArchiveNow extends LitElement {
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
       <div
-        class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
+        class="-mb-4 -mt-4 overflow-auto pb-4 pt-4 [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
         <div class="mb-3 mt-3">
           <div
             class="${this.isFinished
               ? "translate-x-0"
-              : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full border border-brand-green/30 px-2.5 text-brand-green transition-transform lg:pl-1.5"
+              : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full text-brand-green transition-transform"
           >
             ${this.isFinished
               ? html`
-                  <span class="pl-1.5">🎉</span>
+                  🎉
                   <span class="text-sm"> Archiving finished! </span>
                 `
               : html`
@@ -460,17 +469,17 @@ class ArchiveNow extends LitElement {
         </dl>
 
         <hr class="my-3 rounded-md border-brand-green/30" />
-
-        <h3 class="mt-4 mb-4 text-sm font-semibold leading-none text-stone-700">Next Steps</h3>
+        <h3 class="mt-4 mb-2 text-sm font-semibold leading-none text-stone-700">Next Steps</h3>
         <p class="mb-2 mt-1 text-sm">View your archive any time with
           <a
             class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
             href="http://replayweb.page"
             target="_blank"
-            >ReplayWeb.page</a>.</p>
+            >ReplayWeb.page</a>.
+          </p>
 
         <p class="mb-4 mt-1 text-sm">
-          Ready to go beyond the demo? Find the Webrecorder tools that best fit your archiving needs.
+          Ready to go beyond the demo? Check out these other Webrecorder tools:
         </p>
 
         ${card(
@@ -478,8 +487,7 @@ class ArchiveNow extends LitElement {
           "Browsertrix",
           html`
             <p>
-              Automate archiving entire websites on schedule and share your
-              archives with others.
+              Fully automated archiving of entire websites on a set schedule.
             </p>
           `,
           {
@@ -491,25 +499,13 @@ class ArchiveNow extends LitElement {
         ${card(
           awpLockupSrc,
           "ArchiveWeb.page",
-          html` <p>Archive while you browse with our Chrome extension.</p> `,
+          html` <p>Archive while you browse with our free Chrome extension.</p> `,
           {
             href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
             text: "Install Extension",
           },
           true,
         )}
-
-        <hr class="my-3 rounded-md border-brand-green/30" />
-
-        <div>
-          <button
-            class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
-            @click=${() => (this.showCreateDialog = true)}
-          >
-            <sl-icon name="arrow-clockwise" class="text-lg"></sl-icon>
-            <span class="text-sm">Create another archive</span>
-          </button>
-        </div>
       </div>
     `;
   }
@@ -728,17 +724,6 @@ class ArchiveNow extends LitElement {
       default:
         break;
     }
-  }
-
-  private showBackdrop() {
-    if (!this.hintBackdrop || this.hintBackdrop.style.display === "block")
-      return;
-
-    this.hintBackdrop.style.display = "block";
-
-    window.requestAnimationFrame(() => {
-      this.hintBackdrop!.style.opacity = "1";
-    });
   }
 
   private hideBackdrop() {

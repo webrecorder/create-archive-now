@@ -58,17 +58,17 @@
   archive-now {
     @apply grid h-full gap-4;
     grid-template-areas:
-      "header"
-      "archive"
-      "detail";
-    grid-template-rows: min-content 1fr theme(size.48);
-    grid-template-columns: 1fr;
+      "header restart"
+      "archive archive"
+      "detail detail";
+    grid-template-rows: min-content 1fr min-content theme(size.48);
+    grid-template-columns: 1fr auto;
   }
 
   @media screen(lg) {
     archive-now {
       grid-template-areas:
-        "header header"
+        "header restart"
         "archive detail";
       grid-template-rows: min-content 1fr;
       grid-template-columns: 1fr theme(size.80);
