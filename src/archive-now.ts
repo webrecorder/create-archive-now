@@ -343,7 +343,7 @@ class ArchiveNow extends LitElement {
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
       <div
-        class="mr-16 overflow-auto [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
+        class="-mb-4 mr-16 mt-[calc(-2rem-20px)] overflow-auto pb-4 pt-[calc(+2rem+20px)] [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
         <div class="mb-3 mt-3">
           <div
