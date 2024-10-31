@@ -469,17 +469,17 @@ class ArchiveNow extends LitElement {
         </dl>
 
         <hr class="my-3 rounded-md border-brand-green/30" />
-
-        <h3 class="mt-4 mb-4 text-sm font-semibold leading-none text-stone-700">Next Steps</h3>
+        <h3 class="mt-4 mb-2 text-sm font-semibold leading-none text-stone-700">Next Steps</h3>
         <p class="mb-2 mt-1 text-sm">View your archive any time with
           <a
             class="font-medium text-cyan-500 transition-colors hover:text-cyan-400"
             href="http://replayweb.page"
             target="_blank"
-            >ReplayWeb.page</a>.</p>
+            >ReplayWeb.page</a>.
+          </p>
 
         <p class="mb-4 mt-1 text-sm">
-          Ready to go beyond the demo? Find the Webrecorder tools that best fit your archiving needs.
+          Ready to go beyond the demo? Check out these other Webrecorder tools:
         </p>
 
         ${card(
@@ -487,8 +487,7 @@ class ArchiveNow extends LitElement {
           "Browsertrix",
           html`
             <p>
-              Automate archiving entire websites on schedule and share your
-              archives with others.
+              Fully automated archiving of entire websites on a set schedule.
             </p>
           `,
           {
@@ -500,7 +499,7 @@ class ArchiveNow extends LitElement {
         ${card(
           awpLockupSrc,
           "ArchiveWeb.page",
-          html` <p>Archive while you browse with our Chrome extension.</p> `,
+          html` <p>Archive while you browse with our free Chrome extension.</p> `,
           {
             href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
             text: "Install Extension",
