@@ -327,6 +327,15 @@ class ArchiveNow extends LitElement {
           <span class="text-sm">Back to Webrecorder.net</span>
         </a>
       </header>
+      <div class="justify-self-end [grid-area:restart]">
+        <button
+          class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
+          @click=${() => (this.showCreateDialog = true)}
+        >
+          <span class="text-sm">Start over</span>
+          <sl-icon name="arrow-clockwise" class="text-lg"></sl-icon>
+        </button>
+      </div>
       <div
         class="${this.isFinished || this.showHint || this.showCreateDialog
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
@@ -343,7 +352,7 @@ class ArchiveNow extends LitElement {
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
       </div>
       <div
-        class="-mb-4 -mt-4 overflow-auto pb-4 pt-4 [grid-area:detail] lg:mr-0 lg:mt-[calc(-2rem-20px)] lg:px-4 lg:pt-[calc(+2rem+20px)] 2xl:px-6"
+        class="-mb-4 -mt-4 overflow-auto pb-4 pt-4 [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
       >
         <div class="mb-3 mt-3">
           <div
@@ -498,18 +507,6 @@ class ArchiveNow extends LitElement {
           },
           true,
         )}
-
-        <hr class="my-3 rounded-md border-brand-green/30" />
-
-        <div>
-          <button
-            class="flex items-center gap-2 leading-none text-stone-400 transition-colors hover:text-stone-600"
-            @click=${() => (this.showCreateDialog = true)}
-          >
-            <sl-icon name="arrow-clockwise" class="text-lg"></sl-icon>
-            <span class="text-sm">Create another archive</span>
-          </button>
-        </div>
       </div>
     `;
   }

@@ -60,6 +60,7 @@
     grid-template-areas:
       "header"
       "archive"
+      "restart"
       "detail";
     grid-template-rows: min-content 1fr theme(size.48);
     grid-template-columns: 1fr;
@@ -68,7 +69,7 @@
   @media screen(lg) {
     archive-now {
       grid-template-areas:
-        "header header"
+        "header restart"
         "archive detail";
       grid-template-rows: min-content 1fr;
       grid-template-columns: 1fr theme(size.80);
