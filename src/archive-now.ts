@@ -730,17 +730,6 @@ class ArchiveNow extends LitElement {
     }
   }
 
-  private showBackdrop() {
-    if (!this.hintBackdrop || this.hintBackdrop.style.display === "block")
-      return;
-
-    this.hintBackdrop.style.display = "block";
-
-    window.requestAnimationFrame(() => {
-      this.hintBackdrop!.style.opacity = "1";
-    });
-  }
-
   private hideBackdrop() {
     if (!this.hintBackdrop || this.hintBackdrop.style.display === "none")
       return;
