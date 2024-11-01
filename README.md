@@ -1,4 +1,4 @@
-# Create Archive Now - In Browser Archiving + Replay Demo
+# Create Archive Now (CAN) - In Browser Archiving + Replay Demo
 
 This tool provides an in-browser archiving + replay via a CORS proxy.
 
