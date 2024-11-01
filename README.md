@@ -1,5 +1,11 @@
 # Create Archive Now (CAN) - In Browser Archiving + Replay Demo
 
+<h1>
+    <div align="center">
+        <img alt="Create Archive Now" src="assets/screenshot.png" width="90%">
+    </div>
+</h1>
+
 This tool provides an in-browser archiving + replay via a CORS proxy.
 
 It uses the new ArchiveWeb.page embed <archive-web-page> to provide the archiving,
