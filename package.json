@@ -1,5 +1,5 @@
 {
-  "name": "archive-now",
+  "name": "@webrecorder/create-archive-now",
   "version": "1.0.0",
   "type": "module",
   "description": "",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webrecorder/archive-now.git"
+    "url": "git+https://github.com/webrecorder/create-archive-now.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Webrecorder Software",
+  "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/webrecorder/archive-now/issues"
+    "url": "https://github.com/webrecorder/create-archive-now/issues"
   },
-  "homepage": "https://github.com/webrecorder/archive-now#readme",
+  "homepage": "https://github.com/webrecorder/create-archive-now#readme",
   "dependencies": {
     "@shoelace-style/shoelace": "^2.17.1",
     "@webrecorder/archivewebpage": "^0.13.2",
@@ -42,6 +42,7 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "tailwindcss": "^3.4.14",
+    "terser-webpack-plugin": "^5.3.10",
     "ts-lit-plugin": "^2.0.2",
     "ts-loader": "^9.5.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",

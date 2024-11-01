@@ -1,9 +1,14 @@
 const path = require("path");
+const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+
+const BANNER = `[name].js is part of the Webrecorder Create Archive Now! (CAN!) (https://create.webrecorder.net/) Copyright (C) 2024-${new Date().getFullYear()}, Webrecorder Software. Licensed under the Affero General Public License v3.`;
+
 
 /** @type {import('webpack').Configuration} */
 module.exports = (env, argv) => {
@@ -19,7 +24,9 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: [".ts", ".js"],
-      plugins: [new TsconfigPathsPlugin()],
+      plugins: [
+        new TsconfigPathsPlugin(),
+      ],
     },
 
     //devtool: argv.mode === "production" ? undefined : "source-map",
@@ -29,6 +36,15 @@ module.exports = (env, argv) => {
       open: true,
       static: path.join(__dirname, "dist"),
       hot: true,
+    },
+
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          extractComments: false,
+        }),
+      ],
     },
 
     module: {
@@ -92,6 +108,7 @@ module.exports = (env, argv) => {
       //    { from: "./node_modules/\@webrecorder/archivewebpage/dist/embed/replay/sw.js", to: "../replay/sw.js" }
       //  ],
       //}),
+      new webpack.BannerPlugin(BANNER),
       new ForkTsCheckerWebpackPlugin({}),
       new MiniCssExtractPlugin(),
       new CopyPlugin({
@@ -118,11 +135,11 @@ module.exports = (env, argv) => {
         template: "src/index.ejs",
         templateParameters: {
           production: env.production,
-          title: "Archive Now • Webrecorder",
+          title: "Create Archive Now • Webrecorder",
           description:
-            "Archive Now, a demo of Webrecorder’s web archiving tools",
-          baseUrl: "https://archivenow.webrecorder.net",
-          homeUrl: "https://staging.webrecorder.net",
+            "Create Archive Now, a demo of Webrecorder’s web archiving tools",
+          baseUrl: "https://create.webrecorder.net",
+          homeUrl: "https://create.webrecorder.net",
         },
         inject: "head",
         scriptLoading: "blocking",
