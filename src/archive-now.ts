@@ -79,6 +79,20 @@ class ArchiveNow extends LitElement {
   private currUrl = "";
   private shownForUrl = false;
 
+  @state()
+  private isEmpty = false;
+
+  constructor() {
+    super();
+    const hash = window.location.hash.startsWith("#url=");
+    if (!hash) {
+      this.showHint = false;
+      this.showCreateDialog = true;
+      this.isEmpty = true;
+      this.removeLinky();
+    }
+  }
+
   private hintMessages: Record<Hint, TemplateResult> = {
     "first-load": html`<p class="mb-3">
         Browse and interact with the website like you would normally. Every link
@@ -341,15 +355,16 @@ class ArchiveNow extends LitElement {
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
           : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
-        ${!this.isFinished
+        ${!this.isEmpty ? 
+          !this.isFinished
           ? html` <archive-web-page
               proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
               sandbox="true"
               coll=${this.collId}
               deepLink="true"
-              url=${DEFAULT_URL}
             ></archive-web-page>`
-          : html` <replay-web-page coll=${this.collId}></replay-web-page>`}
+          : html` <replay-web-page coll=${this.collId}></replay-web-page>`
+          : html``}
       </div>
       <div
         class="-mb-4 -mt-4 overflow-auto pb-4 pt-4 [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
@@ -360,7 +375,8 @@ class ArchiveNow extends LitElement {
               ? "translate-x-0"
               : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full text-brand-green transition-transform"
           >
-            ${this.isFinished
+            ${!this.isEmpty ? 
+            this.isFinished
               ? html`
                   🎉
                   <span class="text-sm"> Archiving finished! </span>
@@ -374,7 +390,7 @@ class ArchiveNow extends LitElement {
                     Click <strong class="font-semibold">Finish</strong> to
                     finalize your archive
                   </span>
-                `}
+                ` : ``}
           </div>
         </div>
         <!-- FOR LINKY
@@ -391,7 +407,7 @@ class ArchiveNow extends LitElement {
       <div
         class="pointer-events-none absolute bottom-0 right-0 size-32 opacity-50 transition-opacity delay-75 [background:radial-gradient(farthest-side_at_bottom_right,white,transparent)]"
       ></div>
-      ${this.renderLinky()} ${this.renderUrlDialog()}
+      ${!this.isEmpty ? this.renderLinky() : ""} ${this.renderUrlDialog()}
     `;
   }
 
@@ -487,7 +503,7 @@ class ArchiveNow extends LitElement {
           "Browsertrix",
           html`
             <p>
-              Fully automated archiving of entire websites on a set schedule.
+              Automated browser-based crawling at scale.
             </p>
           `,
           {
@@ -635,12 +651,19 @@ class ArchiveNow extends LitElement {
     `;
   }
 
+  private onUrlDialogRequestClose(event: Event) {
+    if (this.isEmpty) {
+      event.preventDefault();
+    }
+  }
+
   private renderUrlDialog() {
     return html`
       <sl-dialog
         label="Create New Archive"
         class="[--header-spacing:theme(spacing.3)] [--width:70ch]"
         ?open=${this.showCreateDialog}
+        @sl-request-close=${this.onUrlDialogRequestClose}
         @sl-hide=${() => (this.showCreateDialog = false)}
       >
         <form
@@ -659,23 +682,36 @@ class ArchiveNow extends LitElement {
             input.value = "";
             this.showCreateDialog = false;
 
-            this.hint = "page-load";
+            if (this.isEmpty) {
+              this.isEmpty = false;
+              this.showHint = true;
+              this.hint = "first-load";
+            } else {
+              this.hint = "page-load";
+            }
             this.addLinky();
           }}
         >
+          <div class="flex flex-col">
           <div class="flex items-end gap-3 px-3 pb-3">
             <sl-input
               name="url"
               class="flex-1"
               label="Enter a URL"
               placeholder=${DEFAULT_URL.replace(/\/$/, "")}
-              type="url"
-              autocomplete="off"
+              type="text"
+              autocomplete="url"
+              inputmode="url"
+              spellcheck="false"
               required
             ></sl-input>
             <sl-button type="submit" variant="primary"
               >Start Archiving</sl-button
             >
+          </div>
+          ${!this.isEmpty ? html`
+            <div class="px-3 pb-2 text-sm">Note: Your previous archive will be cleared out. Be sure to download it if you want to keep it!</div>
+            ` : ``}
           </div>
         </form>
       </sl-dialog>
