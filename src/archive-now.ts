@@ -364,7 +364,7 @@ class ArchiveNow extends LitElement {
               deepLink="true"
             ></archive-web-page>`
           : html` <replay-web-page coll=${this.collId}></replay-web-page>`
-          : html`<div></div>`}
+          : html``}
       </div>
       <div
         class="-mb-4 -mt-4 overflow-auto pb-4 pt-4 [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
@@ -699,8 +699,10 @@ class ArchiveNow extends LitElement {
               class="flex-1"
               label="Enter a URL"
               placeholder=${DEFAULT_URL.replace(/\/$/, "")}
-              type="url"
-              autocomplete="off"
+              type="text"
+              autocomplete="url"
+              inputmode="url"
+              spellcheck="false"
               required
             ></sl-input>
             <sl-button type="submit" variant="primary"
