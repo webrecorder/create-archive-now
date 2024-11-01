@@ -1,11 +1,11 @@
-# ArchiveNow - In Browser Archiving + Replay Demo
+# Create Archive Now - In Browser Archiving + Replay Demo
 
-This tool provides an in-browser archiving + replay.
+This tool provides an in-browser archiving + replay via a CORS proxy.
 
 It uses the new ArchiveWeb.page embed <archive-web-page> to provide the archiving,
 and `<replay-web-page>` to provide the replay.
 
-It requires the AWP 0.13.0+ version, currently available in `ts` branch of ArchiveWeb.page.
+It requires the ArchiveWeb.page 0.13.0+ and a CORS proxy.
 
 ## Development
 
@@ -28,16 +28,24 @@ Start dev server:
 yarn start
 ```
 
-### Updating AWP
+### CORS Proxy
 
-This includes a bundled version of AWP 0.13.0 from https://github.com/webrecorder/archiveweb.page/tree/ts-work
+Using this service requires a CORS proxy.
 
-To update AWP:
+We recommend running your own version of a CORS proxy, or our version of: https://github.com/webrecorder/wabac-cors-proxy
+which is designed to be run as a Cloudflare Worker. See that repo for configuring allowed origins.
 
-1) Ensure you have https://github.com/webrecorder/archiveweb.page/tree/ts-work checked out, do `yarn link`
+### Using with local AWP
 
-2) yarn link "@webrecorder/archivewebpage"
+This repo works with the latest release of ArchiveWeb.page NPM package, [@webrecorder/archivewebpage](https://npmjs.com/package/@webrecorder/archivewebpage).
 
-3) Run `yarn run update-awp`
+For development, it may be useful to test with a local version of AWP, which does all the archiving / replay.
 
-This is only needed for bug fixes in AWP at the moment.
+1) Ensure that you have a locally checked out version of [webrecorder/archiveweb.page](https://github.com/webrecorder/archiveweb.page) built. Run `yarn run build` in that repo.
+
+2) Run `yarn link "@webrecorder/archivewebpage"` in this repo
+
+3) Run `yarn run update-awp` to copy the built dist files from AWP for testing.
+
+4) Run `yarn start`.
+
