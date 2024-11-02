@@ -355,15 +355,15 @@ class ArchiveNow extends LitElement {
           ? "shadow shadow-earth-800/10 ring-1 ring-earth-300/50"
           : "shadow-lg shadow-cyan-800/10 ring-2 ring-cyan-300/50"} overflow-hidden rounded-lg bg-white transition-all [grid-area:archive]"
       >
-        ${!this.isEmpty ? 
-          !this.isFinished
-          ? html` <archive-web-page
-              proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
-              sandbox="true"
-              coll=${this.collId}
-              deepLink="true"
-            ></archive-web-page>`
-          : html` <replay-web-page coll=${this.collId}></replay-web-page>`
+        ${!this.isEmpty
+          ? !this.isFinished
+            ? html` <archive-web-page
+                proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
+                sandbox="true"
+                coll=${this.collId}
+                deepLink="true"
+              ></archive-web-page>`
+            : html` <replay-web-page coll=${this.collId}></replay-web-page>`
           : html``}
       </div>
       <div
@@ -375,22 +375,23 @@ class ArchiveNow extends LitElement {
               ? "translate-x-0"
               : "lg:-translate-x-4"} inline-flex h-8 items-center gap-1.5 rounded-full text-brand-green transition-transform"
           >
-            ${!this.isEmpty ? 
-            this.isFinished
-              ? html`
-                  🎉
-                  <span class="text-sm"> Archiving finished! </span>
-                `
-              : html`
-                  <sl-icon
-                    name="arrow-left-circle"
-                    class="hidden text-lg lg:block"
-                  ></sl-icon>
-                  <span class="text-sm">
-                    Click <strong class="font-semibold">Finish</strong> to
-                    finalize your archive
-                  </span>
-                ` : ``}
+            ${!this.isEmpty
+              ? this.isFinished
+                ? html`
+                    🎉
+                    <span class="text-sm"> Archiving finished! </span>
+                  `
+                : html`
+                    <sl-icon
+                      name="arrow-left-circle"
+                      class="hidden text-lg lg:block"
+                    ></sl-icon>
+                    <span class="text-sm">
+                      Click <strong class="font-semibold">Finish</strong> to
+                      finalize your archive
+                    </span>
+                  `
+              : ``}
           </div>
         </div>
         <!-- FOR LINKY
@@ -501,11 +502,7 @@ class ArchiveNow extends LitElement {
         ${card(
           btrixLockupSrc,
           "Browsertrix",
-          html`
-            <p>
-              Automated browser-based crawling at scale.
-            </p>
-          `,
+          html` <p>Automated browser-based crawling at scale.</p> `,
           {
             href: "https://webrecorder.net/browsertrix/",
             text: "Learn More",
@@ -515,7 +512,9 @@ class ArchiveNow extends LitElement {
         ${card(
           awpLockupSrc,
           "ArchiveWeb.page",
-          html` <p>Archive while you browse with our free Chrome extension.</p> `,
+          html`
+            <p>Archive while you browse with our free Chrome extension.</p>
+          `,
           {
             href: "https://chromewebstore.google.com/detail/webrecorder-archivewebpag/fpeoodllldobpkbkabpblcfaogecpndd",
             text: "Install Extension",
@@ -693,25 +692,28 @@ class ArchiveNow extends LitElement {
           }}
         >
           <div class="flex flex-col">
-          <div class="flex items-end gap-3 px-3 pb-3">
-            <sl-input
-              name="url"
-              class="flex-1"
-              label="Enter a URL"
-              placeholder=${DEFAULT_URL.replace(/\/$/, "")}
-              type="text"
-              autocomplete="url"
-              inputmode="url"
-              spellcheck="false"
-              required
-            ></sl-input>
-            <sl-button type="submit" variant="primary"
-              >Start Archiving</sl-button
-            >
-          </div>
-          ${!this.isEmpty ? html`
-            <div class="px-3 pb-2 text-sm">Note: Your previous archive will be cleared out. Be sure to download it if you want to keep it!</div>
-            ` : ``}
+            <div class="flex items-end gap-3 px-3 pb-3">
+              <sl-input
+                name="url"
+                class="flex-1"
+                label="Enter a URL"
+                placeholder=${DEFAULT_URL.replace(/\/$/, "")}
+                type="text"
+                autocomplete="url"
+                inputmode="url"
+                spellcheck="false"
+                required
+              ></sl-input>
+              <sl-button type="submit" variant="primary">Go</sl-button>
+            </div>
+            ${!this.isEmpty
+              ? html`
+                  <div class="px-3 pb-2 text-sm">
+                    Note: Your previous archive will be cleared out. Be sure to
+                    download it if you want to keep it!
+                  </div>
+                `
+              : ``}
           </div>
         </form>
       </sl-dialog>
