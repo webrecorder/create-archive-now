@@ -12,7 +12,13 @@
     <%- title %>
   </title>
   <link rel="sitemap" href="<%= homeUrl %>/sitemap-index.xml" />
-
+  <% if (landingSiteUrl) { %>
+  <script>
+    if (!window.location.hash) {
+      window.location.href = "<%- landingSiteUrl %>";
+    }
+  </script>
+  <% } %>
   <meta property="og:image" content="<%= homeUrl %>/_astro/og.BLv3EsOH.avif" />
   <meta property="og:image:alt" content="Webrecorder">
   <meta property="og:title" content="<%= title %>" />
