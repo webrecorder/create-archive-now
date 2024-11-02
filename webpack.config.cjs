@@ -140,6 +140,8 @@ module.exports = (env, argv) => {
             "Create Archive Now, a demo of Webrecorder’s web archiving tools",
           baseUrl: "https://create.webrecorder.net",
           homeUrl: "https://create.webrecorder.net",
+          // optional landing site url if no hashtag provided
+          landingSiteUrl: process.env.LANDING_SITE_URL,
         },
         inject: "head",
         scriptLoading: "blocking",
