@@ -22,7 +22,7 @@
   "homepage": "https://github.com/webrecorder/create-archive-now#readme",
   "dependencies": {
     "@shoelace-style/shoelace": "^2.17.1",
-    "@webrecorder/archivewebpage": "^0.13.2",
+    "@webrecorder/archivewebpage": "^0.13.3",
     "lit": "^3.2.1",
     "pretty-bytes": "^6.1.1",
     "typescript": "^5.6.3"
