@@ -606,7 +606,7 @@ class ArchiveNow extends LitElement {
             <div
               class="${this.showHint
                 ? "pointer-events-auto"
-                : "pointer-events-none"} max-w-sm -translate-x-3 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all lg:mb-16 lg:translate-x-1"
+                : "pointer-events-none"} max-w-80 -translate-x-3 rounded-lg bg-white/80 shadow-lg shadow-cyan-800/20 ring-2 ring-cyan-300/50 backdrop-blur-md transition-all lg:mb-16 lg:translate-x-1"
             >
               <div
                 class="flex items-center justify-between p-2 leading-none"
@@ -692,10 +692,10 @@ class ArchiveNow extends LitElement {
           }}
         >
           <div class="flex flex-col">
-            <div class="flex items-end gap-3 px-3 pb-3">
+            <div class="flex flex-col items-end gap-3 pb-3 md:flex-row lg:px-3">
               <sl-input
                 name="url"
-                class="flex-1"
+                class="w-full flex-1"
                 label="Enter a URL"
                 placeholder=${DEFAULT_URL.replace(/\/$/, "")}
                 type="text"
@@ -704,7 +704,12 @@ class ArchiveNow extends LitElement {
                 spellcheck="false"
                 required
               ></sl-input>
-              <sl-button type="submit" variant="primary">Go</sl-button>
+              <sl-button
+                class="w-full md:max-w-min"
+                type="submit"
+                variant="primary"
+                >Go</sl-button
+              >
             </div>
             ${!this.isEmpty
               ? html`
