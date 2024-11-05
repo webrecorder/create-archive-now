@@ -33,7 +33,7 @@ module.exports = (env, argv) => {
     devServer: {
       compress: true,
       port: 10001,
-      open: true,
+      open: "/#url=https://example.com/",
       static: path.join(__dirname, "dist"),
       hot: true,
     },
