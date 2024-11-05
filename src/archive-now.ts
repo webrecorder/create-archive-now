@@ -367,7 +367,7 @@ class ArchiveNow extends LitElement {
           : html``}
       </div>
       <div
-        class="-mb-4 -mt-4 overflow-auto pb-4 pt-4 [grid-area:detail] lg:mr-0 lg:px-4 2xl:px-6"
+        class="-mb-4 overflow-auto border-t border-brand-green/30 pb-4 [grid-area:detail] lg:-mt-4 lg:mr-0 lg:border-t-0 lg:px-4 lg:pt-4 2xl:px-6"
       >
         <div class="mb-3 mt-3">
           <div
