@@ -61,7 +61,7 @@
       "header restart"
       "archive archive"
       "detail detail";
-    grid-template-rows: min-content 1fr min-content theme(size.48);
+    grid-template-rows: min-content 1fr 30%;
     grid-template-columns: 1fr auto;
   }
 
