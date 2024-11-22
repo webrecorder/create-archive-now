@@ -870,15 +870,15 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.5.tgz#325db42395cd49fe6c14057f9a900e427df8810e"
   integrity sha512-lqaoKnRYBdo1UgDX8uF24AfGMifWK19TxPmM5FHc2vAGxrJ/qtyUyFBWoY1tISZdelsQ5fBcOusifo5o5wSJxQ==
 
-"@webrecorder/archivewebpage@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@webrecorder/archivewebpage/-/archivewebpage-0.14.0.tgz#fa9def6919833166210cf33b4ce87da91eac2ce4"
-  integrity sha512-PbgH7tW1PqpU3EI7shhYiG1VzdaLuPkHbepnXcmbQ4EIuUjhMxUiM+yHs+mTeG9Mv5pNDlCui9lxx9uw8PMnOg==
+"@webrecorder/archivewebpage@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@webrecorder/archivewebpage/-/archivewebpage-0.14.1.tgz#bed2096a57fc8e3231187f3a7af3ed949da4c88b"
+  integrity sha512-j6SoyOl8YPAM0/lqgoF/7xbIuNzfy2J4Gc3kh/ZgMyOGiJh7nIvKwXr0aRspzVrEI1eRZmdgHCMmxBFOIf0nCg==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.13.0"
     "@ipld/car" "^5.3.1"
-    "@webrecorder/awp-sw" "^0.5.2"
-    "@webrecorder/wabac" "^2.20.5"
+    "@webrecorder/awp-sw" "^0.5.3"
+    "@webrecorder/wabac" "^2.20.6"
     auto-js-ipfs "^2.3.0"
     browsertrix-behaviors "^0.6.4"
     btoa "^1.2.1"
@@ -890,14 +890,14 @@
     node-fetch "2.6.7"
     pdfjs-dist "2.2.228"
     pretty-bytes "^5.6.0"
-    replaywebpage "^2.2.2"
+    replaywebpage "^2.2.3"
     stream-browserify "^3.0.0"
     tsconfig-paths-webpack-plugin "^4.1.0"
     unused-filename "^4.0.1"
     uuid "^8.3.2"
     warcio "^2.4.2"
 
-"@webrecorder/awp-sw@^0.5.2":
+"@webrecorder/awp-sw@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@webrecorder/awp-sw/-/awp-sw-0.5.3.tgz#881699895e09517ac44fda2f37edf40118a7fa66"
   integrity sha512-g8RuI6bF4ixmrurJI+V9hFBZHy1OtIFf6sMqSmJ+JfCQzCg+ZBNTqm8qdFNmiG7cy8Tf2CxXz9LduVKKldin5g==
@@ -920,7 +920,7 @@
   dependencies:
     "@iconify/types" "^2.0.0"
 
-"@webrecorder/wabac@^2.20.5", "@webrecorder/wabac@^2.20.6":
+"@webrecorder/wabac@^2.20.6":
   version "2.20.6"
   resolved "https://registry.yarnpkg.com/@webrecorder/wabac/-/wabac-2.20.6.tgz#8b28b58d5ae900faebd7be30224eadc620838f9e"
   integrity sha512-bCvHgfnKHFzEuwPkIxdYIVuBmVTzOgxf96DeDTdZkhPI99iP7AUrz/Y6+qgoD9Vjn4usozUff25vdViD5mtiUg==
@@ -3561,7 +3561,7 @@ renderkid@^3.0.0:
     lodash "^4.17.21"
     strip-ansi "^6.0.1"
 
-replaywebpage@^2.2.2:
+replaywebpage@^2.2.3:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/replaywebpage/-/replaywebpage-2.2.3.tgz#19a87a6bbb2c7ce59afdc263e46563ed427715fe"
   integrity sha512-lZa77zygBci949lIeuqZy2Ob+vHTefponpOKMg0vSl6D+SY4QPGczJp0fu1XPJSDZEI3ItBBaHIZ7Y6dTr9rpA==
