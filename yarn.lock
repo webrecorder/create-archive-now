@@ -882,15 +882,15 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.5.tgz#325db42395cd49fe6c14057f9a900e427df8810e"
   integrity sha512-lqaoKnRYBdo1UgDX8uF24AfGMifWK19TxPmM5FHc2vAGxrJ/qtyUyFBWoY1tISZdelsQ5fBcOusifo5o5wSJxQ==
 
-"@webrecorder/archivewebpage@^0.15.4":
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/@webrecorder/archivewebpage/-/archivewebpage-0.15.4.tgz#9cf70183a4ed0c40016be05076364d1ecd8a7f0f"
-  integrity sha512-J96jR/4KZUPAFIs4ajcIGFDVVDvti67il4gQQVnu8gYGxpSdf2pPJ4cOy7lomG9fOyuaLBmEqFuMgYMqI7Uz6g==
+"@webrecorder/archivewebpage@^0.15.5":
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/@webrecorder/archivewebpage/-/archivewebpage-0.15.5.tgz#fa1fcbdc0f8992d1c8496cd0b2e1bcc1e0adb6b0"
+  integrity sha512-t+q9Cw3mfDHO2IybzDONJjmIlb1SxuKCMBKcPDgN4sYBMYFor6YxHBddjRBbmeC9fytuxKplJUdxS2jwiYsO3Q==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.13.0"
     "@ipld/car" "^5.3.2"
     "@ipld/unixfs" "^3.0.0"
-    "@webrecorder/wabac" "^2.23.11"
+    "@webrecorder/wabac" "^2.24.0"
     auto-js-ipfs "^2.3.0"
     browsertrix-behaviors "^0.9.2"
     btoa "^1.2.1"
@@ -904,7 +904,7 @@
     p-queue "^8.0.1"
     pdfjs-dist "2.2.228"
     pretty-bytes "^5.6.0"
-    replaywebpage "^2.3.17"
+    replaywebpage "^2.3.18"
     stream-browserify "^3.0.0"
     tsconfig-paths-webpack-plugin "^4.1.0"
     unused-filename "^4.0.1"
@@ -918,7 +918,7 @@
   dependencies:
     "@iconify/types" "^2.0.0"
 
-"@webrecorder/wabac@^2.23.11", "@webrecorder/wabac@^2.24.0":
+"@webrecorder/wabac@^2.24.0":
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/@webrecorder/wabac/-/wabac-2.24.0.tgz#119cda1984158516874fa016939c660b055cc129"
   integrity sha512-/3OZq61A+3hHvkXMj+UO3CbkYVm6285IhSHebgjWsuKlPeWzhUr9GFuamr3HLyiHHbCAWeM7cf+/8c6Phax90Q==
@@ -3758,14 +3758,14 @@ renderkid@^3.0.0:
     lodash "^4.17.21"
     strip-ansi "^6.0.1"
 
-replaywebpage@^2.3.17:
-  version "2.3.17"
-  resolved "https://registry.yarnpkg.com/replaywebpage/-/replaywebpage-2.3.17.tgz#21dff8752ab2d1a9fed96d789ae6b7e81c57fe47"
-  integrity sha512-b42PxbZlVnNQc66c7nTbem0Z0E2J/IiMtgn+ddUgPRiqejvansiC0+geMDNNtp1MLF7n9DGcSkhNLsR0dPYihQ==
+replaywebpage@^2.3.18:
+  version "2.3.18"
+  resolved "https://registry.yarnpkg.com/replaywebpage/-/replaywebpage-2.3.18.tgz#c5f8d8775050cd237d63b5b52a912c28d6373ae5"
+  integrity sha512-GQX4BYm91oHecncaBMGdUkkAtz7KbgWKOu3ztDgvqKdo999jHmuKaFpSUG6GHBg+qMB1YxVGMGSJW3CdpL6Uew==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.15.4"
     "@shoelace-style/shoelace" "~2.15.1"
-    "@webrecorder/wabac" "^2.23.11"
+    "@webrecorder/wabac" "^2.24.0"
     bulma "^0.9.3"
     electron-log "^4.4.1"
     electron-updater "^6.6.2"
