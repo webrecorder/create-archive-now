@@ -23,6 +23,8 @@ import "./shoelace";
 const PAGE_COUNT_MIN = 10;
 const DEFAULT_URL = "https://example.com/";
 
+const CORS_PROXY = "https://cors-proxy.webrecorder.net/proxy/";
+
 type Hint = "first-load" | "page-load" | "error" | "over-page-min" | "finished";
 
 const beforeUnloadHandler = (event: Event) => {
@@ -358,7 +360,7 @@ class ArchiveNow extends LitElement {
         ${!this.isEmpty
           ? !this.isFinished
             ? html` <archive-web-page
-                proxyPrefix="https://archive-now.webrecorder.workers.dev/proxy/"
+                proxyPrefix="${CORS_PROXY}"
                 sandbox="true"
                 coll=${this.collId}
                 deepLink="true"
