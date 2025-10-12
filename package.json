@@ -1,6 +1,6 @@
 {
   "name": "@webrecorder/create-archive-now",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "description": "",
   "scripts": {
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/webrecorder/create-archive-now#readme",
   "dependencies": {
     "@shoelace-style/shoelace": "^2.17.1",
-    "@webrecorder/archivewebpage": "^0.15.6",
+    "@webrecorder/archivewebpage": "^0.15.7",
     "lit": "^3.2.1",
     "pretty-bytes": "^6.1.1",
     "typescript": "^5.6.3"
